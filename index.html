@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zahra's Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    canvas#sprinkle {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    .navbar {
+      transition: background-color 0.5s ease, box-shadow 0.5s ease;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+    .navbar-brand, .nav-link {
+      color: rgb(255, 0, 106) !important;
+      font-weight: 600;
+    }
+    .nav-link:hover {
+      color: #ffffff !important;
+    }
+    .hero {
+      height: 100vh;
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('image/background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+    }
+    .section {
+      padding: 80px 0;
+    }
+    .card {
+      border: none;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+    }
+    /* Tombol hover pink */
+    .btn-dark:hover, .btn-light:hover {
+      background-color: #ff4081 !important;
+      border-color: #ff4081 !important;
+      color: white !important;
+    }
+    footer {
+      background: rgb(255, 0, 106);
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="sprinkle"></canvas>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">MyPortfolio</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" 
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon bg-light"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+        <li class="nav-item"><a class="nav-link" href="#museum">Karya Museum</a></li>
+        <li class="nav-item"><a class="nav-link" href="game.html" target="_blank">Game</a></li>
+        <li class="nav-item"><a class="nav-link" href="#music">Musik Favorit</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section id="home" class="hero" data-aos="fade-up">
+  <h1 class="display-4" data-aos="zoom-in">Hi, I'm Zahra 👋</h1>
+  <p class="lead" data-aos="fade-up">Student | Writer | Programmer | UI/UX Designer</p>
+  <a href="#projects" class="btn btn-light mt-3" data-aos="fade-up">See My Work</a>
+</section>
+
+<section id="projects" class="section container">
+  <h2 class="text-center mb-5" data-aos="fade-up">My Projects</h2>
+  <div class="row text-center">
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body" data-aos="fade-up">
+          <h5 class="card-title">Aplikasi Menu Restoran</h5>
+          <p class="card-text">Prototipe UI/UX untuk aplikasi pemesanan menu di restoran. Didesain menggunakan Figma.</p>
+          <a href="https://www.figma.com/proto/jt1kDsGNY1DzS6z2BGsHve/Aplikasi-Menu" class="btn btn-dark" target="_blank">Lihat Desain</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body" data-aos="fade-up" data-aos-delay="100">
+          <h5 class="card-title">Project UAS</h5>
+          <p class="card-text">Prototipe aplikasi yang dikembangkan sebagai bagian dari Ujian Akhir Semester.</p>
+          <a href="https://www.figma.com/proto/dREFL6kfq7j1gR3gD0Cisp/Project-UAS" class="btn btn-dark" target="_blank">Lihat Desain</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="museum" class="section bg-light">
+  <div class="container">
+    <h2 class="text-center mb-4" data-aos="fade-up">Karya Museum</h2>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h3 data-aos="fade-up">Tulisan & Puisi</h3>
+            <p data-aos="fade-up" data-aos-delay="100">Koleksi puisi, cerpen, dan tulisan lainnya. Salah satunya adalah karya "Rindu". Selengkapnya bisa dibaca di blog pribadiku.</p>
+            <a href="http://wordsofartbyzyulear.blogspot.com" class="btn btn-dark" target="_blank">Kunjungi Blog</a>
+        </div>
+        <div class="col-md-6 text-center mt-4 mt-md-0">
+             <h5 data-aos="fade-up">Hasil Jepretan</h5>
+             <img src="image/cat.jpg" class="img-fluid rounded shadow" alt="Hasil jepretan alam">
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <img src="image/sunset.jpg" class="img-fluid rounded shadow" alt="Senja">
+          </div>
+          <div class="col-md-6">
+            <img src="image/sky.jpg" class="img-fluid rounded shadow" alt="Langit">
+          </div>
+        </div>
+      </div>
+  </div>
+</section>
+
+<section id="music" class="section bg-light">
+  <div class="container">
+    <h2 class="text-center mb-4" data-aos="fade-up" >Musik Favorit</h2>
+    <p class="text-center" data-aos="fade-up" data-aos-delay="100">Playlist musik yang selalu menemaniku coding dan menulis.</p>
+    <div class="text-center mb-5">
+      <iframe style="border-radius:12px" 
+              src="https://open.spotify.com/embed/playlist/5bRuo6FcK4tnEryZqPFkb9" 
+              width="300" height="380" frameBorder="0" allowfullscreen="" 
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    </div>
+</section>
+
+
+<!-- Contact Me --> 
+    <div class="text-center"> 
+       <h2 class="mb-3" data-aos="fade-up" >📬 Contact Me</h2>
+       <p class="text-center" data-aos="fade-up" data-aos-delay="100"> You can meet me here </p>
+
+       <div class="row justify-content-center">
+        <div class="col-md-5 mb-3">
+          <div class="card contact-card shadow-sm text-center" data-aos="fade-up">
+            <i class="fab fa-instagram fa-3x"></i>
+            <h5>Instagram</h5>
+            <p><a href="https://instagram.com/zyulear" target="_blank"class="btn btn-dark me-2">zyulear</a></p>
+          </div>
+        </div>
+        <div class="col-md-5 mb-3">
+          <div class="card contact-card shadow-sm text-center" data-aos="fade-up" data-aos-delay="100">
+            <i class="fas fa-blog fa-3x"></i>
+            <h5>Blog</h5>
+            <p><a href="http://wordsofartbyzyulear.blogspot.com" target="_blank" class="btn btn-dark">wordsofartbyzyulear</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<footer>
+  <p>© 2025 Zahra - All Rights Reserved</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const canvas = document.getElementById("sprinkle");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let particles = [];
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 5 + 2;
+      this.speedY = Math.random() * 2 + 0.5;
+      this.speedX = (Math.random() - 0.5) * 1.5;
+      this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+      this.rotation = Math.random() * 360;
+      this.rotationSpeed = (Math.random() - 0.5) * 4;
+    }
+    update() {
+      this.y += this.speedY;
+      this.x += this.speedX;
+      this.rotation += this.rotationSpeed;
+      if (this.y > canvas.height + this.size) {
+        this.y = -this.size;
+        this.x = Math.random() * canvas.width;
+      }
+    }
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate((this.rotation * Math.PI) / 180);
+      ctx.fillStyle = this.color;
+      ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+      ctx.restore();
+    }
+  }
+
+  function init() {
+    particles = [];
+    for (let i = 0; i < 100; i++) {
+      particles.push(new Particle());
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.update();
+      p.draw();
+    });
+    requestAnimationFrame(animate);
+  }
+
+  init();
+  animate();
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    init();
+  });
+</script>
+</body>
+</html>
