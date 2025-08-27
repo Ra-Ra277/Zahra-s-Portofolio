@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photography Showcase</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow-x: hidden; /* Mengatur overflow horizontal */
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            background: linear-gradient(180deg, #1a0d1a, #2b0f2b);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Particle container */
+        .particle-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ff99ff, transparent);
+            animation: fall linear infinite;
+            opacity: 0.8;
+            filter: blur(1px);
+        }
+
+        @keyframes fall {
+            from {
+                transform: translateY(-10%) scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(110vh) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        /* Main content styles */
+        .container {
+            padding: 20px;
+            text-align: center;
+            z-index: 1;
+        }
+        
+        .main-heading {
+            font-size: 3rem;
+            font-weight: 600;
+        }
+
+        .sub-heading {
+            font-size: 1rem;
+            margin-top: -10px;
+            margin-bottom: 40px;
+            color: #ccc;
+        }
+
+        .gallery-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .photo-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            overflow: hidden;
+            width: 300px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+            padding: 15px;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff00ff;
+        }
+        
+        .photo-card::before {
+            content: attr(data-category);
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .photo-details {
+            padding-top: 15px;
+            text-align: left;
+        }
+
+        .photo-details h5 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .photo-details p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ff00ff;
+        }
+
+        .back-button {
+            margin-top: 40px;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(90deg, #ff00ff, #e600e6);
+            box-shadow: 0 4px 15px rgba(255, 0, 255, 0.4);
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 0, 255, 0.6);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="particle-container"></div>
+
+    <div class="container">
+        <h1 class="main-heading">Photography Showcase</h1>
+        <p class="sub-heading">A gallery of photographs I have taken.</p>
+
+        <div class="gallery-container">
+            <div class="photo-card" data-category="Holiday">
+                <img src="cat.jpg" alt="Photo 1 Image">
+                <div class="photo-details">
+                    <h5>Photo 1</h5>
+                    <p>Cat</p>
+                </div>
+            </div>
+
+            <div class="photo-card" data-category="Holiday">
+                <img src="sky.jpg" alt="Photo 2 Image">
+                <div class="photo-details">
+                    <h5>Photo 2</h5>
+                    <p>Sky</p>
+                </div>
+            </div>
+
+            <div class="photo-card" data-category="Back to home">
+                <img src="sunset.jpg" alt="Photo 3 Image">
+                <div class="photo-details">
+                    <h5>Photo 3</h5>
+                    <p>Sunset With You</p>
+                </div>
+            </div>
+        </div>
+
+        <a href="index.html#museum" class="back-button">Back To Home Page</a>
+    </div>
+
+    <script>
+        const container = document.querySelector('.particle-container');
+        const particleCount = 80;
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+
+            const size = Math.random() * 6 + 4; // 4px - 10px
+            const duration = Math.random() * 8 + 5; // 5s - 13s
+            const delay = Math.random() * 5;
+            const left = Math.random() * 100; // posisi random
+            const blur = Math.random() * 2; // blur random (depth effect)
+
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${left}%`;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.animationDelay = `${delay}s`;
+            particle.style.filter = `blur(${blur}px)`;
+
+            container.appendChild(particle);
+
+            // remove particle setelah animasi selesai
+            setTimeout(() => particle.remove(), duration * 1000);
+        }
+
+        setInterval(createParticle, 200);
+
+        // create awal
+        for (let i = 0; i < particleCount; i++) {
+            createParticle();
+        }
+    </script>
+</body>
+</html>
