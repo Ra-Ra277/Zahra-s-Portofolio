@@ -233,41 +233,69 @@
             return typingDiv;
         }
         
-        // Fungsi untuk mengirim pesan ke AI (client-side dengan Gemini API)
-        async function sendMessageToAI(message) {
-            // Ganti dengan API key Anda (untuk production, gunakan backend)
-            // Ini hanya contoh, jangan taruh API key sebenarnya di frontend!
-            const API_KEY = "PASTE_YOUR_GEMINI_API_KEY_HERE";
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+        // Knowledge base untuk AI Assistant
+        const knowledgeBase = {
+            greetings: ["halo", "hai", "hi", "hello", "hei", "hola", "hey"],
+            skills: ["skill", "kemampuan", "keahlian", "bisa apa", "expertise", "ability"],
+            projects: ["project", "proyek", "karya", "portfolio", "pekerjaan", "hasil kerja"],
+            contact: ["kontak", "hubungi", "email", "telepon", "whatsapp", "media sosial", "sosmed"],
+            thanks: ["terima kasih", "thanks", "thank you", "makasih", "thx"],
+            help: ["bantuan", "help", "bantu", "tolong", "caranya", "how to", "how do"],
+            education: ["pendidikan", "education", "sekolah", "kuliah", "lulusan", "almamater"],
+            experience: ["pengalaman", "experience", "kerja", "bekerja", "pekerjaan", "karir"]
+        };
+        
+        // Responses untuk AI Assistant
+        const responses = {
+            greeting: "Halo! Senang bertemu dengan Anda. Ada yang bisa saya bantu tentang portofolio Zahra?",
+            skill: "Zahra memiliki kemampuan dalam HTML, CSS, JavaScript, React, Node.js, dan Python. Dia juga sedang mempelajari machine learning dan AI development.",
+            project: "Zahra telah mengerjakan beberapa project termasuk website portofolio ini, aplikasi todo list, website e-commerce sederhana, dan beberapa project machine learning dasar.",
+            contact: "Anda dapat menghubungi Zahra melalui email: zahra@example.com atau LinkedIn: linkedin.com/in/zahra. Jangan ragu untuk menghubungi!",
+            thanks: "Sama-sama! Senang bisa membantu. Jika ada pertanyaan lagi, silakan tanyakan saja.",
+            help: "Saya di sini untuk membantu menjawab pertanyaan tentang Zahra. Anda bisa menanyakan tentang skill, project, atau cara menghubungi Zahra.",
+            education: "Zahra adalah lulusan Computer Science dari Universitas Contoh. Dia aktif dalam organisasi developer dan sering mengikuti workshop programming.",
+            experience: "Zahra memiliki pengalaman magang sebagai web developer di Contoh Company selama 6 bulan. Dia juga aktif dalam project freelance dan open source.",
+            default: "Maaf, saya tidak mengerti pertanyaan Anda. Coba tanyakan tentang skill, project, atau cara menghubungi Zahra."
+        };
+        
+        // Fungsi untuk memahami pesan pengguna
+        function understandMessage(message) {
+            const lowerMessage = message.toLowerCase();
             
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: `Anda adalah asisten AI untuk portofolio Zahra, seorang programmer. 
-                                Bantu jawab pertanyaan tentang skill, project, dan pengembangannya. 
-                                Jawablah dengan ramah dan informatif. Pertanyaan: ${message}`
-                            }]
-                        }]
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                
-                const data = await response.json();
-                return data.candidates[0].content.parts[0].text;
-            } catch (error) {
-                console.error('Error:', error);
-                // Fallback response jika API error
-                return "Maaf, saya sedang mengalami gangguan teknis. Silakan hubungi Zahra langsung melalui email atau LinkedIn yang tertera di portofolio.";
+            if (knowledgeBase.greetings.some(word => lowerMessage.includes(word))) {
+                return "greeting";
+            } else if (knowledgeBase.skills.some(word => lowerMessage.includes(word))) {
+                return "skill";
+            } else if (knowledgeBase.projects.some(word => lowerMessage.includes(word))) {
+                return "project";
+            } else if (knowledgeBase.contact.some(word => lowerMessage.includes(word))) {
+                return "contact";
+            } else if (knowledgeBase.thanks.some(word => lowerMessage.includes(word))) {
+                return "thanks";
+            } else if (knowledgeBase.help.some(word => lowerMessage.includes(word))) {
+                return "help";
+            } else if (knowledgeBase.education.some(word => lowerMessage.includes(word))) {
+                return "education";
+            } else if (knowledgeBase.experience.some(word => lowerMessage.includes(word))) {
+                return "experience";
+            } else {
+                return "default";
             }
+        }
+        
+        // Fungsi untuk menghasilkan respons AI
+        function generateAIResponse(message) {
+            const intent = understandMessage(message);
+            return responses[intent] || responses.default;
+        }
+        
+        // Fungsi untuk mengirim pesan ke AI (rule-based)
+        async function sendMessageToAI(message) {
+            // Simulasi delay seperti AI sedang memproses
+            await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 700));
+            
+            // Generate respons berdasarkan aturan
+            return generateAIResponse(message);
         }
         
         // Fungsi untuk menambahkan pesan ke chat
