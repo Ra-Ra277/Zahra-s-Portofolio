@@ -2,28 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Photography Showcase</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #ff00ff;
+            --secondary-color: #e600e6;
+            --background-gradient: linear-gradient(180deg, #1a0d1a, #2b0f2b);
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            height: 100vh;
-            overflow-x: hidden; /* Mengatur overflow horizontal */
+            min-height: 100vh;
+            overflow-x: hidden;
             font-family: 'Poppins', sans-serif;
             color: white;
-            background: linear-gradient(180deg, #1a0d1a, #2b0f2b);
+            background: var(--background-gradient);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
+            padding: 20px;
         }
 
         /* Particle container */
         .particle-container {
-            position: absolute;
+            position: fixed;
             width: 100%;
             height: 100%;
             top: 0;
@@ -57,44 +69,46 @@
             padding: 20px;
             text-align: center;
             z-index: 1;
+            width: 100%;
+            max-width: 1200px;
         }
         
         .main-heading {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 600;
+            margin-bottom: 10px;
         }
 
         .sub-heading {
             font-size: 1rem;
-            margin-top: -10px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             color: #ccc;
         }
 
         .gallery-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
             padding: 20px;
+            width: 100%;
         }
 
         .photo-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
             border: 2px solid transparent;
             border-radius: 20px;
             overflow: hidden;
-            width: 300px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(8px);
             transition: transform 0.3s, border-color 0.3s;
             position: relative;
             padding: 15px;
+            width: 100%;
         }
 
         .photo-card:hover {
             transform: translateY(-5px);
-            border-color: #ff00ff;
+            border-color: var(--primary-color);
         }
         
         .photo-card::before {
@@ -107,6 +121,7 @@
             padding: 5px 10px;
             border-radius: 5px;
             font-size: 0.8em;
+            z-index: 2;
         }
 
         .photo-card img {
@@ -129,21 +144,23 @@
         .photo-details p {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #ff00ff;
+            color: var(--primary-color);
+            margin-bottom: 0;
         }
 
         .back-button {
             margin-top: 40px;
-            padding: 10px 30px;
+            padding: 12px 30px;
             border-radius: 50px;
             font-size: 1rem;
             font-weight: 600;
             text-decoration: none;
             color: white;
-            background: linear-gradient(90deg, #ff00ff, #e600e6);
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             box-shadow: 0 4px 15px rgba(255, 0, 255, 0.4);
             border: none;
             transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
         }
 
         .back-button:hover {
@@ -151,6 +168,71 @@
             box-shadow: 0 6px 20px rgba(255, 0, 255, 0.6);
         }
 
+        /* Media Queries untuk Responsivitas */
+        @media (max-width: 768px) {
+            .main-heading {
+                font-size: 2rem;
+            }
+            
+            .gallery-container {
+                grid-template-columns: 1fr;
+                padding: 10px;
+                gap: 15px;
+            }
+            
+            .photo-card {
+                padding: 10px;
+            }
+            
+            .photo-card img {
+                height: 180px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .particle {
+                animation-duration: 10s !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-heading {
+                font-size: 1.8rem;
+            }
+            
+            .sub-heading {
+                font-size: 0.9rem;
+            }
+            
+            .photo-card img {
+                height: 160px;
+            }
+            
+            .photo-details h5 {
+                font-size: 1rem;
+            }
+            
+            .photo-details p {
+                font-size: 1.2rem;
+            }
+            
+            .back-button {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+            }
+            
+            body {
+                padding: 15px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .gallery-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
@@ -190,18 +272,19 @@
     </div>
 
     <script>
+        // Optimasi partikel untuk performa yang lebih baik
         const container = document.querySelector('.particle-container');
-        const particleCount = 80;
+        const particleCount = window.innerWidth < 768 ? 40 : 80; // Kurangi partikel di mobile
 
         function createParticle() {
             const particle = document.createElement('div');
             particle.classList.add('particle');
 
-            const size = Math.random() * 6 + 4; // 4px - 10px
-            const duration = Math.random() * 8 + 5; // 5s - 13s
+            const size = Math.random() * 6 + 4;
+            const duration = Math.random() * 8 + 5;
             const delay = Math.random() * 5;
-            const left = Math.random() * 100; // posisi random
-            const blur = Math.random() * 2; // blur random (depth effect)
+            const left = Math.random() * 100;
+            const blur = Math.random() * 2;
 
             particle.style.width = `${size}px`;
             particle.style.height = `${size}px`;
@@ -212,16 +295,32 @@
 
             container.appendChild(particle);
 
-            // remove particle setelah animasi selesai
-            setTimeout(() => particle.remove(), duration * 1000);
+            // Hapus partikel setelah animasi selesai
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, duration * 1000);
         }
 
-        setInterval(createParticle, 200);
+        // Atur interval berdasarkan device
+        const intervalTime = window.innerWidth < 768 ? 300 : 200;
+        let particleInterval = setInterval(createParticle, intervalTime);
 
-        // create awal
+        // Buat partikel awal
         for (let i = 0; i < particleCount; i++) {
             createParticle();
         }
+
+        // Optimasi untuk resize
+        window.addEventListener('resize', function() {
+            // Hentikan interval lama
+            clearInterval(particleInterval);
+            
+            // Atur ulang interval berdasarkan ukuran layar baru
+            const newIntervalTime = window.innerWidth < 768 ? 300 : 200;
+            particleInterval = setInterval(createParticle, newIntervalTime);
+        });
     </script>
 </body>
 </html>
