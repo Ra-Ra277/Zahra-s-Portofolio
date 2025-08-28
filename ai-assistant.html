@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zahra's Portofolio - AI Assistant</title>
+    <style>
+        /* Styling untuk AI Assistant */
+        #ai-assistant {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        #ai-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        #ai-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+        
+        #ai-chat-container {
+            display: none;
+            width: 320px;
+            height: 420px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            flex-direction: column;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        #ai-chat-header {
+            padding: 16px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #ai-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        
+        #ai-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        #ai-chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .message {
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background: #6e8efb;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 6px;
+        }
+        
+        .ai-message {
+            background: #e9ecef;
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 6px;
+        }
+        
+        #ai-chat-input {
+            display: flex;
+            padding: 12px;
+            border-top: 1px solid #dee2e6;
+            background: white;
+            gap: 8px;
+        }
+        
+        #ai-user-input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid #ced4da;
+            border-radius: 20px;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        #ai-user-input:focus {
+            border-color: #6e8efb;
+        }
+        
+        #ai-send {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #ai-send:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+        
+        #ai-send:disabled {
+            background: #ced4da;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            padding: 12px 16px;
+            background: #e9ecef;
+            border-radius: 18px;
+            margin-right: auto;
+            border-bottom-left-radius: 6px;
+            gap: 4px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #6c757d;
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-4px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- AI Assistant -->
+    <div id="ai-assistant">
+        <button id="ai-button">AI</button>
+        <div id="ai-chat-container">
+            <div id="ai-chat-header">
+                <h3 style="margin: 0;">AI Assistant Zahra</h3>
+                <button id="ai-close">✕</button>
+            </div>
+            <div id="ai-chat-messages">
+                <div class="message ai-message">Halo! Saya AI assistant Zahra. Ada yang bisa saya bantu tentang portofolio atau project programming?</div>
+            </div>
+            <div id="ai-chat-input">
+                <input type="text" id="ai-user-input" placeholder="Tulis pesan...">
+                <button id="ai-send">Kirim</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elemen UI
+        const aiButton = document.getElementById('ai-button');
+        const aiChatContainer = document.getElementById('ai-chat-container');
+        const aiClose = document.getElementById('ai-close');
+        const aiChatMessages = document.getElementById('ai-chat-messages');
+        const aiUserInput = document.getElementById('ai-user-input');
+        const aiSend = document.getElementById('ai-send');
+        
+        // Toggle chat window
+        aiButton.addEventListener('click', () => {
+            aiChatContainer.style.display = aiChatContainer.style.display === 'flex' ? 'none' : 'flex';
+            if (aiChatContainer.style.display === 'flex') {
+                aiUserInput.focus();
+            }
+        });
+        
+        aiClose.addEventListener('click', () => {
+            aiChatContainer.style.display = 'none';
+        });
+        
+        // Fungsi untuk menampilkan indikator typing
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('typing-indicator');
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            aiChatMessages.appendChild(typingDiv);
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+            return typingDiv;
+        }
+        
+        // Fungsi untuk mengirim pesan ke AI (client-side dengan Gemini API)
+        async function sendMessageToAI(message) {
+            // Ganti dengan API key Anda (untuk production, gunakan backend)
+            // Ini hanya contoh, jangan taruh API key sebenarnya di frontend!
+            const API_KEY = "PASTE_YOUR_GEMINI_API_KEY_HERE";
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `Anda adalah asisten AI untuk portofolio Zahra, seorang programmer. 
+                                Bantu jawab pertanyaan tentang skill, project, dan pengembangannya. 
+                                Jawablah dengan ramah dan informatif. Pertanyaan: ${message}`
+                            }]
+                        }]
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error('Error:', error);
+                // Fallback response jika API error
+                return "Maaf, saya sedang mengalami gangguan teknis. Silakan hubungi Zahra langsung melalui email atau LinkedIn yang tertera di portofolio.";
+            }
+        }
+        
+        // Fungsi untuk menambahkan pesan ke chat
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'ai-message');
+            messageDiv.textContent = text;
+            aiChatMessages.appendChild(messageDiv);
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+        }
+        
+        // Event listener untuk mengirim pesan
+        aiSend.addEventListener('click', async () => {
+            const message = aiUserInput.value.trim();
+            if (message) {
+                addMessage(message, true);
+                aiUserInput.value = '';
+                aiSend.disabled = true;
+                
+                // Tampilkan indikator typing
+                const typingIndicator = showTypingIndicator();
+                
+                // Kirim ke AI dan dapatkan balasan
+                const reply = await sendMessageToAI(message);
+                
+                // Hapus indikator typing dan tampilkan balasan
+                aiChatMessages.removeChild(typingIndicator);
+                addMessage(reply, false);
+                aiSend.disabled = false;
+            }
+        });
+        
+        // Juga kirim dengan Enter key
+        aiUserInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                aiSend.click();
+            }
+        });
+    </script>
+</body>
+</html>
