@@ -257,6 +257,156 @@
   </div>
 </section>
 
+<!-- Tambahkan kode berikut sebelum tag </body> di index.html Anda -->
+
+<!-- AI Assistant Button -->
+<div id="ai-assistant" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+  <button id="ai-button" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #6e8efb, #a777e3); color: white; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); font-size: 24px; transition: all 0.3s ease;">AI</button>
+  <div id="ai-chat-container" style="display: none; width: 320px; height: 420px; background: white; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; position: absolute; bottom: 70px; right: 0;">
+    <div id="ai-chat-header" style="padding: 16px; background: linear-gradient(135deg, #6e8efb, #a777e3); color: white; display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="margin: 0;">AI Assistant Zahra</h3>
+      <button id="ai-close" style="background: none; border: none; color: white; cursor: pointer; font-size: 20px; padding: 4px 8px; border-radius: 50%; transition: background 0.2s;">✕</button>
+    </div>
+    <div id="ai-chat-messages" style="flex: 1; padding: 16px; overflow-y: auto; background: #f8f9fa; display: flex; flex-direction: column; gap: 12px;">
+      <div class="message ai-message" style="padding: 12px 16px; border-radius: 18px; max-width: 80%; line-height: 1.4; animation: fadeIn 0.3s ease; background: #e9ecef; color: #333; margin-right: auto; border-bottom-left-radius: 6px;">Halo! Saya AI assistant Zahra. Ada yang bisa saya bantu tentang portofolio atau project programming?</div>
+    </div>
+    <div id="ai-chat-input" style="display: flex; padding: 12px; border-top: 1px solid #dee2e6; background: white; gap: 8px;">
+      <input type="text" id="ai-user-input" placeholder="Tulis pesan..." style="flex: 1; padding: 10px 16px; border: 1px solid #ced4da; border-radius: 20px; outline: none; font-family: inherit; transition: border-color 0.3s;">
+      <button id="ai-send" style="padding: 10px 16px; background: linear-gradient(135deg, #6e8efb, #a777e3); color: white; border: none; border-radius: 20px; cursor: pointer; transition: all 0.3s;">Kirim</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// JavaScript untuk AI Assistant
+document.addEventListener('DOMContentLoaded', function() {
+  // Elemen UI
+  const aiButton = document.getElementById('ai-button');
+  const aiChatContainer = document.getElementById('ai-chat-container');
+  const aiClose = document.getElementById('ai-close');
+  const aiChatMessages = document.getElementById('ai-chat-messages');
+  const aiUserInput = document.getElementById('ai-user-input');
+  const aiSend = document.getElementById('ai-send');
+  
+  // Toggle chat window
+  aiButton.addEventListener('click', () => {
+    aiChatContainer.style.display = aiChatContainer.style.display === 'flex' ? 'none' : 'flex';
+    if (aiChatContainer.style.display === 'flex') {
+      aiUserInput.focus();
+    }
+  });
+  
+  aiClose.addEventListener('click', () => {
+    aiChatContainer.style.display = 'none';
+  });
+  
+  // Fungsi untuk menampilkan indikator typing
+  function showTypingIndicator() {
+    const typingDiv = document.createElement('div');
+    typingDiv.classList.add('typing-indicator');
+    typingDiv.innerHTML = `
+      <div style="display: flex; padding: 12px 16px; background: #e9ecef; border-radius: 18px; margin-right: auto; border-bottom-left-radius: 6px; gap: 4px;">
+        <div class="typing-dot" style="width: 8px; height: 8px; background: #6c757d; border-radius: 50%; animation: typingAnimation 1.4s infinite;"></div>
+        <div class="typing-dot" style="width: 8px; height: 8px; background: #6c757d; border-radius: 50%; animation: typingAnimation 1.4s infinite; animation-delay: 0.2s;"></div>
+        <div class="typing-dot" style="width: 8px; height: 8px; background: #6c757d; border-radius: 50%; animation: typingAnimation 1.4s infinite; animation-delay: 0.4s;"></div>
+      </div>
+    `;
+    aiChatMessages.appendChild(typingDiv);
+    aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+    return typingDiv;
+  }
+  
+  // Animasi untuk typing indicator
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes typingAnimation {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-4px); }
+    }
+    .message {
+      padding: 12px 16px;
+      border-radius: 18px;
+      max-width: 80%;
+      line-height: 1.4;
+      animation: fadeIn 0.3s ease;
+    }
+    .user-message {
+      background: #6e8efb;
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 6px;
+    }
+    .ai-message {
+      background: #e9ecef;
+      color: #333;
+      margin-right: auto;
+      border-bottom-left-radius: 6px;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Fungsi untuk mengirim pesan ke AI (simulasi)
+  async function sendMessageToAI(message) {
+    // Simulasi respons AI (dalam implementasi nyata, ganti dengan API call)
+    const responses = [
+      "Hai! Saya AI assistant Zahra. Saya di sini untuk membantu menjawab pertanyaan tentang portofolio dan project-program Zahra.",
+      "Zahra adalah seorang programmer pemula yang sedang mengembangkan skill di bidang web development.",
+      "Portofolio ini dibuat menggunakan HTML, CSS, dan JavaScript. Tertarik untuk mengetahui lebih detail?",
+      "Zahra sedang mempelajari React.js dan Node.js untuk pengembangan web yang lebih interaktif.",
+      "Untuk kolaborasi atau pertanyaan lebih lanjut, Anda bisa menghubungi Zahra melalui email yang tertera di portofolio."
+    ];
+    
+    // Simulasi delay jaringan
+    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+    
+    // Kembalikan respons acak (dalam implementasi nyata, ganti dengan respons dari API)
+    return responses[Math.floor(Math.random() * responses.length)];
+  }
+  
+  // Fungsi untuk menambahkan pesan ke chat
+  function addMessage(text, isUser) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    messageDiv.classList.add(isUser ? 'user-message' : 'ai-message');
+    messageDiv.textContent = text;
+    aiChatMessages.appendChild(messageDiv);
+    aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+  }
+  
+  // Event listener untuk mengirim pesan
+  aiSend.addEventListener('click', async () => {
+    const message = aiUserInput.value.trim();
+    if (message) {
+      addMessage(message, true);
+      aiUserInput.value = '';
+      aiSend.disabled = true;
+      
+      // Tampilkan indikator typing
+      const typingIndicator = showTypingIndicator();
+      
+      // Kirim ke AI dan dapatkan balasan
+      const reply = await sendMessageToAI(message);
+      
+      // Hapus indikator typing dan tampilkan balasan
+      aiChatMessages.removeChild(typingIndicator);
+      addMessage(reply, false);
+      aiSend.disabled = false;
+    }
+  });
+  
+  // Juga kirim dengan Enter key
+  aiUserInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      aiSend.click();
+    }
+  });
+});
+</script>
+
 <!-- Footer -->
 <footer>
   <p>© 2025 Zahra - All Rights Reserved</p>
@@ -265,6 +415,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
 
 
 
