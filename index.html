@@ -6,61 +6,384 @@
   <title>Zahra's Portfolio</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary-color: #ff4081;
+      --secondary-color: #a777e3;
+      --dark-color: #212529;
+      --light-color: #f8f9fa;
+      --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    }
+    
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
       overflow-x: hidden;
+      color: #333;
     }
+    
+    /* Navbar Styles */
     .navbar {
-      transition: background-color 0.5s ease, box-shadow 0.5s ease;
+      transition: all 0.5s ease;
       background: rgba(0,0,0,0.3);
       backdrop-filter: blur(10px);
+      padding: 15px 0;
     }
+    
+    .navbar.scrolled {
+      background: rgba(0,0,0,0.9);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      padding: 10px 0;
+    }
+    
     .navbar-brand, .nav-link {
-      color: #ff4081 !important;
+      color: var(--primary-color) !important;
       font-weight: 600;
+      transition: all 0.3s ease;
     }
+    
+    .nav-link {
+      position: relative;
+      margin: 0 10px;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    /* Hero Section */
     .hero {
-      height: 90vh;
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(rgba(255, 255, 255, 0.769), rgba(255, 255, 255, 0.6)), url('background.jpg');
+      background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.7)), url('background.jpg') center/cover no-repeat;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
+      animation: pulse 15s infinite linear;
+    }
+    
+    @keyframes pulse {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    
     .hero img {
       max-width: 100%;
       border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      transition: all 0.5s ease;
+      transform: perspective(1000px) rotateY(10deg);
     }
+    
+    .hero img:hover {
+      transform: perspective(1000px) rotateY(0deg);
+    }
+    
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Section Styles */
     .section {
-      padding: 80px 0;
+      padding: 100px 0;
+      position: relative;
     }
+    
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--gradient);
+      border-radius: 2px;
+    }
+    
+    .section-subtitle {
+      text-align: center;
+      margin-bottom: 60px;
+      color: #6c757d;
+    }
+    
+    /* Card Styles */
     .card {
       border: none;
-      transition: transform 0.2s;
+      border-radius: 15px;
+      transition: all 0.4s ease;
+      overflow: hidden;
+      height: 100%;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
+    
     .card:hover {
-      transform: translateY(-8px);
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
     }
-    /* Tombol hover pink */
-    .btn-dark:hover, .btn-light:hover {
-      background-color: #ff4081 !important;
-      border-color: #ff4081 !important;
+    
+    .card-body {
+      padding: 25px;
+    }
+    
+    .card-title {
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: var(--dark-color);
+    }
+    
+    /* Button Styles */
+    .btn {
+      border-radius: 50px;
+      padding: 12px 30px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: var(--gradient);
+      transition: all 0.5s ease;
+      z-index: -1;
+    }
+    
+    .btn:hover::before {
+      width: 100%;
+    }
+    
+    .btn-dark, .btn-light, .btn-danger {
+      border: none;
+      position: relative;
+    }
+    
+    .btn-dark {
+      background: var(--dark-color);
+    }
+    
+    .btn-danger {
+      background: var(--primary-color);
+    }
+    
+    .btn-dark:hover, .btn-light:hover, .btn-danger:hover {
+      background: transparent;
       color: white !important;
     }
-    .contact-card {
-      padding: 20px;
+    
+    /* Museum Section */
+    .museum-section {
+      background: linear-gradient(to bottom, #ffe4ef, #fff);
     }
+    
+    /* Contact Section */
+    .contact-card {
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      transition: all 0.3s ease;
+      height: 100%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    .contact-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    
+    .contact-card i {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Form Styles */
+    .form-control {
+      border-radius: 10px;
+      padding: 15px 20px;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(255, 64, 129, 0.25);
+    }
+    
+    /* Footer */
     footer {
-      background: #ff4081;
+      background: var(--gradient);
       color: white;
       text-align: center;
-      padding: 20px 0;
+      padding: 30px 0;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate {
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    .delay-1 {
+      animation-delay: 0.2s;
+    }
+    
+    .delay-2 {
+      animation-delay: 0.4s;
+    }
+    
+    .delay-3 {
+      animation-delay: 0.6s;
+    }
+    
+    /* Back to Top Button */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--gradient);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      z-index: 999;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .back-to-top.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .back-to-top:hover {
+      transform: translateY(-5px);
+    }
+    
+    /* Loading Animation */
+    .loader-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: all 0.5s ease;
+    }
+    
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      .hero img {
+        margin-top: 30px;
+      }
     }
   </style>
 </head>
 <body>
+
+<!-- Loading Screen -->
+<div class="loader-wrapper">
+  <div class="loader"></div>
+</div>
+
+<!-- Back to Top Button -->
+<a href="#home" class="back-to-top">
+  <i class="fas fa-arrow-up"></i>
+</a>
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg fixed-top">
@@ -69,10 +392,11 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
             data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" 
             aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon bg-light"></span>
+      <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
         <li class="nav-item"><a class="nav-link" href="#museum">Museum Works</a></li>
         <li class="nav-item"><a class="nav-link" href="#games">Games</a></li>
@@ -84,84 +408,109 @@
 </nav>
 
 <!-- Hero -->
-<section class="hero container">
-  <div class="row align-items-center">
-    <div class="col-md-6">
-      <h1>Welcome to My Portfolio</h1>
-      <p>Explore my projects, museum works, and games. Hope You Enjoy In My World :)</p>
-      <a href="#contact" class="btn btn-dark me-2">Contact Me</a>
-      <a href="#projects" class="btn btn-danger">View Projects</a>
-    </div>
-    <div class="col-md-6 col-lg-4">
-      <img src="background.jpg" alt="Hero Image">
+<section id="home" class="hero">
+  <div class="container hero-content">
+    <div class="row align-items-center">
+      <div class="col-md-6 animate">
+        <h1>Welcome to My Creative World</h1>
+        <p class="lead">Explore my projects, museum works, and games. Hope You Enjoy In My World :)</p>
+        <div class="d-flex mt-4">
+          <a href="#contact" class="btn btn-dark me-3">Contact Me</a>
+          <a href="#projects" class="btn btn-danger">View Projects</a>
+        </div>
+      </div>
+      <div class="col-md-6 text-center animate delay-1">
+        <img src="background.jpg" alt="Zahra's Profile" class="img-fluid">
+      </div>
     </div>
   </div>
 </section>
 
 <!-- Projects -->
-<section id="projects" class="section container text-center">
-  <h2>Projects</h2>
-  <p>Take a look at my latest work.</p>
-  <div class="row mt-4">
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">Aplikasi Menu Restoran</h5>
-          <p class="card-text">Prototipe UI/UX untuk aplikasi pemesanan menu di restoran. Didesain menggunakan Figma.</p>
-          <a href="https://www.figma.com/proto/jt1kDsGNY1DzS6z2BGsHve/Aplikasi-Menu?node-id=213-3703&t=ehUqXjT95iOp0XyL-1&scaling=scale-down&content-scaling=fixed&page-id=2%3A2663&starting-point-node-id=213%3A3703&show-proto-sidebar=1" class="btn btn-dark" target="_blank">Lihat Desain</a>
+<section id="projects" class="section">
+  <div class="container">
+    <h2 class="section-title">Projects</h2>
+    <p class="section-subtitle">Take a look at my latest creative work</p>
+    <div class="row">
+      <div class="col-md-4 mb-4 animate">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="icon-wrapper mb-3">
+              <i class="fas fa-utensils fa-2x text-primary"></i>
+            </div>
+            <h5 class="card-title">Restaurant Menu App</h5>
+            <p class="card-text">UI/UX prototype for a restaurant menu ordering application. Designed with Figma with a focus on user experience and visual appeal.</p>
+            <a href="https://www.figma.com/proto/jt1kDsGNY1DzS6z2BGsHve/Aplikasi-Menu?node-id=213-3703&t=ehUqXjT95iOp0XyL-1&scaling=scale-down&content-scaling=fixed&page-id=2%3A2663&starting-point-node-id=213%3A3703&show-proto-sidebar=1" class="btn btn-dark mt-3" target="_blank">View Design</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">Project UAS</h5>
-          <p class="card-text">Prototipe aplikasi yang dikembangkan bersama teman kelompok sebagai bagian dari Ujian Akhir Semester.</p>
-          <a href="https://www.figma.com/proto/dREFL6kfq7j1gR3gD0Cisp/Project-UAS?node-id=1-4&p=f&t=1xUbcymkCk9ny63I-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A4&show-proto-sidebar=1" class="btn btn-dark" target="_blank">Lihat Desain</a>
+      <div class="col-md-4 mb-4 animate delay-1">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="icon-wrapper mb-3">
+              <i class="fas fa-graduation-cap fa-2x text-primary"></i>
+            </div>
+            <h5 class="card-title">Final Semester Project</h5>
+            <p class="card-text">A prototype application developed with my team as part of the Final Semester Examination. Focused on solving real-world problems.</p>
+            <a href="https://www.figma.com/proto/dREFL6kfq7j1gR3gD0Cisp/Project-UAS?node-id=1-4&p=f&t=1xUbcymkCk9ny63I-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A4&show-proto-sidebar=1" class="btn btn-dark mt-3" target="_blank">View Design</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5>Gak tau mau ngapain</h5>
-          <p>Tapi aku ada sesuatu buat kamu hahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahaha </p>
-          <a href="loveyou.html" class="btn btn-dark" target="_blank"> Nyesel kalo nggak liat</a>
+      <div class="col-md-4 mb-4 animate delay-2">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="icon-wrapper mb-3">
+              <i class="fas fa-surprise fa-2x text-primary"></i>
+            </div>
+            <h5 class="card-title">Special Surprise</h5>
+            <p class="card-text">I have something special just for you! Click the link below to discover a little surprise that I've created with love and creativity.</p>
+            <a href="loveyou.html" class="btn btn-dark mt-3" target="_blank">Discover Surprise</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 <!-- Museum -->
-<section id="museum" class="section" style="background:#ffe4ef;">
-  <div class="container text-center">
-    <h2>Museum Works</h2>
-    <p>Insights into my work presented at museums.</p>
-    <div class="row mt-4 g-4">
-      <div class="col-md-4 col-sm-12">
-        <div class="card shadow-sm h-100">
+<section id="museum" class="section museum-section">
+  <div class="container">
+    <h2 class="section-title">Museum Works</h2>
+    <p class="section-subtitle">Insights into my creative works and writings</p>
+    <div class="row">
+      <div class="col-md-4 mb-4 animate">
+        <div class="card h-100">
           <div class="card-body">
-            <h3 data-aos="fade-up">Tulisan & Puisi</h3>
-            <p data-aos="fade-up" data-aos-delay="100">Koleksi puisi, cerpen, dan tulisan lainnya. Salah satunya adalah karya "Rindu". Selengkapnya bisa dibaca di blog pribadiku.</p>
-            <a href="https://wordsofartbyzyulear.blogspot.com/2025/02/tentang-rindu.html" class="btn btn-dark" target="_blank">Kunjungi Blog</a>
-        </div>
+            <div class="icon-wrapper mb-3">
+              <i class="fas fa-pen-fancy fa-2x text-primary"></i>
+            </div>
+            <h3 class="card-title">Writings & Poetry</h3>
+            <p class="card-text">Collection of poems, short stories, and other writings. One of them is the work "Rindu". More can be read on my personal blog.</p>
+            <a href="https://wordsofartbyzyulear.blogspot.com/2025/02/tentang-rindu.html" class="btn btn-dark mt-3" target="_blank">Visit Blog</a>
+          </div>
         </div>
       </div>
-      <div class="col-md-4 col-sm-12">
-        <div class="card shadow-sm h-100">
+      <div class="col-md-4 mb-4 animate delay-1">
+        <div class="card h-100">
           <div class="card-body">
-            <h5>Photography Showcase</h5>
-            <p>A gallery of photographs I have taken. Hanya bisa dilihat oleh mata batin hehe.</p>
-            <a href="photo.html" class="btn btn-dark" target="_blank">Kunjungi Gallery</a>
-        </div>
+            <div class="icon-wrapper mb-3">
+              <i class="fas fa-camera fa-2x text-primary"></i>
+            </div>
+            <h5 class="card-title">Photography Showcase</h5>
+            <p class="card-text">A gallery of photographs I have taken, capturing moments and emotions through my lens. A visual diary of my perspective.</p>
+            <a href="photo.html" class="btn btn-dark mt-3" target="_blank">Visit Gallery</a>
+          </div>
         </div>
       </div>
-      <div class="col-md-4 col-sm-12">
-        <div class="card shadow-sm h-100">
+      <div class="col-md-4 mb-4 animate delay-2">
+        <div class="card h-100">
           <div class="card-body">
-            <h5> Education and Innovation Blog</h5>
-            <p>Tthoughts on the presentation of words in the art of technological innovation.</p>
-            <a href="https://wordsofartbyzyulear.blogspot.com/2025/02/paradigma-inovasi-dan-peran-teknologi.html" class="btn btn-dark" target="_blank">Kunjungi Blog</a>
+            <div class="icon-wrapper mb-3">
+              <i class="fas fa-lightbulb fa-2x text-primary"></i>
+            </div>
+            <h5 class="card-title">Education & Innovation Blog</h5>
+            <p class="card-text">Thoughts on the presentation of words in the art of technological innovation and digital creativity in the modern era.</p>
+            <a href="https://wordsofartbyzyulear.blogspot.com/2025/02/paradigma-inovasi-dan-peran-teknologi.html" class="btn btn-dark mt-3" target="_blank">Visit Blog</a>
           </div>
         </div>
       </div>
@@ -170,27 +519,29 @@
 </section>
 
 <!-- Games -->
-<section id="games" class="section container text-center">
-  <h2>Games</h2>
-  <p>Check out my game projects.</p>
-  <div class="row mt-4 g-4">
-    <div class="col-md-6 col-sm-12">
-      <div class="card shadow-sm h-100">
-        <div class="card-body">
-          <i class="fas fa-gamepad fa-3x mb-3"></i>
-          <h5>Game One</h5>
-          <p>An interactive adventure game.<br>Available on Web</p>
-          <a href="game.html" class="btn btn-dark">Play</a>
+<section id="games" class="section">
+  <div class="container">
+    <h2 class="section-title">Games</h2>
+    <p class="section-subtitle">Check out my interactive game projects</p>
+    <div class="row">
+      <div class="col-md-6 mb-4 animate">
+        <div class="card h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-gamepad fa-3x mb-3 text-primary"></i>
+            <h5 class="card-title">Interactive Adventure</h5>
+            <p class="card-text">An interactive adventure game with engaging storyline and beautiful visuals. Available on Web platform.</p>
+            <a href="game.html" class="btn btn-dark mt-3">Play Now</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-6 col-sm-12">
-      <div class="card shadow-sm h-100">
-        <div class="card-body">
-          <i class="fas fa-puzzle-piece fa-3x mb-3"></i>
-          <h5>Game Two</h5>
-          <p>A puzzle-solving experience.<br>Available on Web</p>
-          <a href="game1.html" class="btn btn-dark">Play </a>
+      <div class="col-md-6 mb-4 animate delay-1">
+        <div class="card h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-puzzle-piece fa-3x mb-3 text-primary"></i>
+            <h5 class="card-title">Puzzle Challenge</h5>
+            <p class="card-text">A puzzle-solving experience that will test your logic and creativity. Available on Web platform.</p>
+            <a href="game1.html" class="btn btn-dark mt-3">Play Now</a>
+          </div>
         </div>
       </div>
     </div>
@@ -198,24 +549,28 @@
 </section>
 
 <!-- Music -->
-<section id="music" class="section" style="background:#ffe4ef;">
-  <div class="container text-center">
-    <h2>Music Playlist</h2>
-    <p>Listen to my current favorite tracks. </p>
+<section id="music" class="section museum-section">
+  <div class="container">
+    <h2 class="section-title">Music Playlist</h2>
+    <p class="section-subtitle">Listen to my current favorite tracks and inspirations</p>
     <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card shadow-sm">
+      <div class="col-lg-6 mb-4 animate">
+        <div class="card">
           <div class="card-body">
-            <h5>Spotify</h5>
-            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/5bRuo6FcK4tnEryZqPFkb9" width="100%" height="380"></iframe>
+            <h5 class="card-title text-center mb-4"><i class="fab fa-spotify me-2"></i>Spotify Playlist</h5>
+            <div class="ratio ratio-16x9">
+              <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/5bRuo6FcK4tnEryZqPFkb9" width="100%" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-6 mt-3 mt-md-0">
-        <div class="card shadow-sm">
+      <div class="col-lg-6 mb-4 animate delay-1">
+        <div class="card">
           <div class="card-body">
-            <h5>YouTube</h5>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/playlist?list=PLwSEfSwyXXwIyXhoKl05T1NEABXDXHe5D&si=VkASN--4q-S33EyV"></iframe>
+            <h5 class="card-title text-center mb-4"><i class="fab fa-youtube me-2"></i>YouTube Playlist</h5>
+            <div class="ratio ratio-16x9">
+              <iframe width="100%" height="315" src="https://www.youtube.com/embed/playlist?list=PLwSEfSwyXXwIyXhoKl05T1NEABXDXHe5D" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
           </div>
         </div>
       </div>
@@ -224,32 +579,59 @@
 </section>
 
 <!-- Contact -->
-<section id="contact" class="section container">
-  <h2 class="text-center">📬 Contact Me</h2>
-  <p class="text-center">I'd love to hear from you!</p>
-  <div class="row mt-4">
-    <div class="col-md-6">
-      <form>
-        <input type="text" class="form-control mb-3" placeholder="Your Name">
-        <input type="email" class="form-control mb-3" placeholder="Your Email">
-        <textarea class="form-control mb-3" rows="4" placeholder="Message"></textarea>
-        <button class="btn btn-danger"> Can't To Send Message hehehe </button>
-      </form>
-    </div>
-    <div class="col-md-6">
-      <div class="row">
-        <div class="col-md-12 mb-3">
-          <div class="card contact-card shadow-sm text-center">
-            <i class="fab fa-instagram fa-2x mb-2"></i>
-            <h5>Instagram</h5>
-            <p><a href="https://instagram.com/zyulear" target="_blank">@zyulear</a></p>
+<section id="contact" class="section">
+  <div class="container">
+    <h2 class="section-title">📬 Contact Me</h2>
+    <p class="section-subtitle">I'd love to hear from you and collaborate on exciting projects!</p>
+    <div class="row mt-5">
+      <div class="col-lg-6 mb-4 animate">
+        <div class="card h-100">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Send me a message</h4>
+            <form id="contactForm">
+              <div class="mb-3">
+                <input type="text" class="form-control" placeholder="Your Name" required>
+              </div>
+              <div class="mb-3">
+                <input type="email" class="form-control" placeholder="Your Email" required>
+              </div>
+              <div class="mb-3">
+                <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-danger w-100">Send Message</button>
+            </form>
           </div>
         </div>
-        <div class="col-md-12">
-          <div class="card contact-card shadow-sm text-center">
-            <i class="fas fa-blog fa-2x mb-2"></i>
-            <h5>Blog</h5>
-            <p><a href="http://wordsofartbyzyulear.blogspot.com" target="_blank">wordsofartbyzyulear</a></p>
+      </div>
+      <div class="col-lg-6 animate delay-1">
+        <div class="row h-100">
+          <div class="col-md-6 mb-3">
+            <div class="contact-card h-100">
+              <i class="fab fa-instagram"></i>
+              <h5>Instagram</h5>
+              <p><a href="https://instagram.com/zyulear" target="_blank">@zyulear</a></p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="contact-card h-100">
+              <i class="fas fa-envelope"></i>
+              <h5>Email</h5>
+              <p><a href="mailto:zyulear27@gmail.com">zyulear27@gmail.com</a></p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="contact-card h-100">
+              <i class="fas fa-blog"></i>
+              <h5>Blog</h5>
+              <p><a href="http://wordsofartbyzyulear.blogspot.com" target="_blank">Words of Art</a></p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="contact-card h-100">
+              <i class="fab fa-linkedin"></i>
+              <h5>LinkedIn</h5>
+              <p><a href="#" target="_blank">Zahra Yulia</a></p>
+            </div>
           </div>
         </div>
       </div>
@@ -459,6 +841,7 @@
 </style>
 
 <script>
+    
 // JavaScript untuk AI Assistant
 document.addEventListener('DOMContentLoaded', function() {
   // Elemen UI
@@ -512,15 +895,15 @@ document.addEventListener('DOMContentLoaded', function() {
   // Responses untuk AI Assistant
   const responses = {
     greeting: "Halo! Senang bertemu dengan Anda. Ada yang bisa saya bantu tentang portofolio Zahra?",
-    skill: "Zahra memiliki kemampuan dalam HTML, CSS, JavaScript, React, Node.js, dan Python. Dia juga sedang mempelajari machine learning dan AI development. Skill utamanya adalah UI/UX designer dan frontend development.",
+    skill: "Zahra memiliki kemampuan dalam HTML, CSS, JavaScript, React, Node.js, dan Python. Dia juga sedang mempelajari machine learning dan AI development. Skill utamanya adalah frontend development dengan React.",
     project: "Zahra telah mengerjakan beberapa project termasuk website portofolio ini, aplikasi todo list, website e-commerce sederhana, dan beberapa project machine learning dasar. Semua project bisa dilihat di halaman project portofolio ini.",
-    contact: "Anda dapat menghubungi Zahra melalui email: zyulear27@gmail.com atau LinkedIn: linkedin.com/in/zahrayuliarahman. Jangan ragu untuk menghubungi! Zahra senang berkolaborasi dalam project menarik.",
+    contact: "Anda dapat menghubungi Zahra melalui email: zyulear27@gmail.com. Jangan ragu untuk menghubungi! Zahra senang berkolaborasi dalam project menarik.",
     thanks: "Sama-sama! Senang bisa membantu. Jika ada pertanyaan lagi, silakan tanyakan saja. Jangan lupa cek project-project Zahra ya!",
     help: "Saya di sini untuk membantu menjawab pertanyaan tentang Zahra. Anda bisa menanyakan tentang skill, project, pengalaman, pendidikan, atau cara menghubungi Zahra.",
-    education: "Zahra adalah mahasiswi Bisnis Digital dari Universitas Muhammadiyah Purwekerto  dengan IPK 3.8. Dia aktif dalam membuat project-project kecil dan sering mengikuti workshop programming.",
-    experience: "Zahra memiliki pengalaman sebagai web developer dan UI/UX designer di Upwork. Dia juga aktif dalam project freelance dan open source. Saat ini Zahra sedang mencari opportunities sebagai frontend developer dan UI UX desaigner.",
+    education: "Zahra adalah lulusan Computer Science dari Universitas Contoh dengan IPK 3.8. Dia aktif dalam organisasi developer dan sering mengikuti workshop programming. Skripsi Zahra tentang implementasi AI pada aplikasi web.",
+    experience: "Zahra memiliki pengalaman magang sebagai web developer di Contoh Company selama 6 bulan. Dia juga aktif dalam project freelance dan open source. Saat ini Zahra sedang mencari opportunities sebagai frontend developer.",
     services: "Zahra menerima jasa pembuatan website dan aplikasi web. Untuk informasi lebih lanjut tentang layanan dan harga, silakan hubungi Zahra langsung melalui email atau LinkedIn.",
-    about: "Zahra adalah seorang frontend developer dan UI/UX designer pemula yang passionate terhadap teknologi web dan AI. Selain coding, Zahra juga suka menulis artikel tech dan berbagi pengetahuan di blog pribadi.",
+    about: "Zahra adalah seorang frontend developer pemula yang passionate terhadap teknologi web dan AI. Selain coding, Zahra juga suka menulis artikel tech dan berbagi pengetahuan di blog pribadi.",
     default: "Maaf, saya tidak mengerti pertanyaan Anda. Coba tanyakan tentang skill, project, pengalaman, atau cara menghubungi Zahra. Atau mungkin Anda bisa menjelaskan dengan cara berbeda?"
   };
   
@@ -610,21 +993,96 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- ======= END AI ASSISTANT ======= -->
 
 <!-- Footer -->
-<footer>
-  <p>© 2025 Zahra - All Rights Reserved</p>
+<footer class="animate">
+  <div class="container">
+    <p>© 2025 Zahra Yulia Rahman - All Rights Reserved</p>
+    <div class="mt-3">
+      <a href="#" class="text-light mx-2"><i class="fab fa-instagram fa-lg"></i></a>
+      <a href="#" class="text-light mx-2"><i class="far fa-envelope fa-lg"></i></a>
+      <a href="#" class="text-light mx-2"><i class="fab fa-linkedin fa-lg"></i></a>
+      <a href="#" class="text-light mx-2"><i class="fab fa-github fa-lg"></i></a>
+    </div>
+  </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Wait for the DOM to be fully loaded
+  document.addEventListener ('DOMContentLoaded', function() {
+    // Hide loader when page is loaded
+    setTimeout(function() {
+      document.querySelector('.loader-wrapper').style.opacity = '0';
+      setTimeout(function() {
+        document.querySelector('.loader-wrapper').style.display = 'none';
+      }, 500);
+    }, 1000);
+    
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      const backToTop = document.querySelector('.back-to-top');
+      
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+        backToTop.classList.add('active');
+      } else {
+        navbar.classList.remove('scrolled');
+        backToTop.classList.remove('active');
+      }
+    });
+    
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // Animation on scroll
+    const animateElements = document.querySelectorAll('.animate');
+    
+    function checkScroll() {
+      animateElements.forEach(element => {
+        const elementPosition = element.getBoundingClientRect().top;
+        const screenPosition = window.innerHeight / 1.3;
+        
+        if (elementPosition < screenPosition) {
+          element.style.opacity = '1';
+          element.style.transform = 'translateY(0)';
+        }
+      });
+    }
+
+    // Initial check
+    checkScroll();
+    
+    // Check on scroll
+    window.addEventListener('scroll', checkScroll);
+    
+    // Form submission
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // In a real application, you would send the form data to a server here
+        alert('Thank you for your message! I will get back to you soon.');
+        contactForm.reset();
+      });
+    }
+  });
+</script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
