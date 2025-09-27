@@ -63,60 +63,180 @@
       width: 100%;
     }
     
-    /* Hero Section */
+    /* HERO SECTION */
     .hero {
       height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.7)), url('background.jpg') center/cover no-repeat;
       position: relative;
       overflow: hidden;
+      display: flex;
+      align-items: center;
     }
     
-    .hero::before {
-      content: '';
+    .hero-video {
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
-      animation: pulse 15s infinite linear;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translateX(-50%) translateY(-50%);
+      z-index: 1;
+      object-fit: cover;
     }
     
-    @keyframes pulse {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2;
     }
     
     .hero-content {
       position: relative;
-      z-index: 1;
-    }
-    
-    .hero img {
-      max-width: 100%;
-      border-radius: 20px;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-      transition: all 0.5s ease;
-      transform: perspective(1000px) rotateY(10deg);
-    }
-    
-    .hero img:hover {
-      transform: perspective(1000px) rotateY(0deg);
+      z-index: 3;
+      color: white;
+      text-align: center;
+      padding: 0 20px;
     }
     
     .hero h1 {
       font-size: 3.5rem;
       font-weight: 700;
-      margin-bottom: 20px;
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeInDown 1s ease forwards;
     }
     
+    .hero .lead {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.5s forwards;
+    }
+    
+    .hero-buttons {
+      opacity: 0;
+      animation: fadeInUp 1s ease 1s forwards;
+    }
+    
+    .btn-dark {
+      background-color: var(--dark-color);
+      border-color: var(--dark-color);
+      border-radius: 30px;
+      padding: 12px 30px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-dark:hover {
+      background-color: #23272b;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn-danger {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      border-radius: 30px;
+      padding: 12px 30px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-danger:hover {
+      background-color: #ff2a40;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(255, 76, 96, 0.3);
+    }
+    
+    .hero-image {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      opacity: 0;
+      animation: fadeInRight 1s ease 1.5s forwards;
+    }
+    
+    .hero-image img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      transform: perspective(1000px) rotateY(-10deg);
+      transition: transform 0.5s ease;
+    }
+    
+    .hero-image img:hover {
+      transform: perspective(1000px) rotateY(0deg);
+    }
+    
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero .lead {
+        font-size: 1.1rem;
+      }
+      
+      .hero-buttons .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+      
+      .hero-buttons .me-3 {
+        margin-right: 0 !important;
+      }
+      
+      .hero-image {
+        margin-top: 40px;
+      }
+      
+      .hero-image img {
+        transform: perspective(1000px) rotateY(0deg);
+        max-width: 80%;
+      }
+    }
+
     /* Section Styles */
     .section {
       padding: 100px 0;
@@ -371,6 +491,64 @@
         margin-top: 30px;
       }
     }
+
+    /* SCROLLING TEXT */
+    .scrolling-text {
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      background: #fff;
+      padding: 15px 0;
+      border-top: 1px solid #f0f0f0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .scrolling-text span {
+      display: inline-block;
+      padding: 0 30px;
+      animation: scroll-left 20s linear infinite;
+    }
+    
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    
+    /* BALON TERBANG */
+    .heart {
+      position: fixed;
+      bottom: -100px;
+      width: 60px;
+      height: 80px;
+      background: radial-gradient(circle at 30% 30%, #ff77ed, #ff009d);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      animation: floatUp 15s linear infinite;
+      z-index: 1;
+      opacity: 0.8;
+    }
+    
+    .heart::after {
+      content: "";
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      width: 2px;
+      height: 25px;
+      background: #555;
+    }
+    
+    .heart1 { left: 15%; animation-delay: 0s; }
+    .heart2 { left: 45%; animation-delay: 5s; width: 50px; height: 70px; }
+    .heart3 { left: 75%; animation-delay: 10s; width: 40px; height: 60px; }
+    
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0.9; }
+      50% { transform: translateY(-400px) scale(1.05) rotate(5deg); opacity: 1; }
+      100% { transform: translateY(-800px) scale(1) rotate(-5deg); opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -407,27 +585,50 @@
   </div>
 </nav>
 
-<!-- Hero -->
-<section id="home" class="hero">
-  <div class="container hero-content">
-    <div class="row align-items-center">
-      <div class="col-md-6 animate">
-        <h1>Welcome to My Creative World</h1>
-        <p class="lead">Explore my projects, museum works, and games. Hope You Enjoy In My World :)</p>
-        <div class="d-flex mt-4">
-          <a href="#contact" class="btn btn-dark me-3">Contact Me</a>
-          <a href="#projects" class="btn btn-danger">View Projects</a>
+ <!-- Hero Section -->
+  <section id="home" class="hero">
+    <video autoplay muted loop class="hero-video">
+      <source src="https://cdn.pixabay.com/video/2024/05/18/212404_large.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="hero-overlay"></div>
+    
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="hero-content">
+            <h1>Welcome to My Creative World</h1>
+            <p class="lead">Explore my projects, museum works, and games. Hope You Enjoy In My World :)</p>
+            <div class="hero-buttons d-flex mt-4 justify-content-center">
+              <a href="#contact" class="btn btn-dark me-3">Contact Me</a>
+              <a href="#projects" class="btn btn-danger">View Projects</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="hero-image">
+            <img src="background.jpg" alt= "Zahra's Profile" class="img-fluid">
+          </div>
         </div>
       </div>
-      <div class="col-md-6 text-center animate delay-1">
-        <img src="background.jpg" alt="Zahra's Profile" class="img-fluid">
-      </div>
     </div>
+  </section>
+
+<!-- SCROLLING CATEGORY -->
+<section>
+  <div class="scrolling-text">
+    <span>Design +</span>
+    <span>App Design +</span>
+    <span>Dashboard +</span>
+    <span>Wireframe +</span>
+    <span>User Research +</span>
+    <span>Zahra +</span>
+    <span>Portfolio +</span>
   </div>
 </section>
 
 <!-- Projects -->
-<section id="projects" class="section">
+<section id="projects" class="section museum-section">
   <div class="container">
     <h2 class="section-title">Projects</h2>
     <p class="section-subtitle">Take a look at my latest creative work</p>
@@ -557,7 +758,7 @@
 </section>
 
 <!--My E-commerce-->
-<section id="E-commerce" class="section museum-section">
+<section id="E-commerce" class="section">
   <div class="container">
     <h2 class="section-title">My E-commerce</h2>
     <p class="section-subtitle">Check out my products</p>
@@ -589,7 +790,7 @@
 </section>
 
 <!-- Museum -->
-<section id="museum" class="section">
+<section id="museum" class="section museum-section">
   <div class="container">
     <h2 class="section-title">Museum Works</h2>
     <p class="section-subtitle">Insights into my creative works and writings</p>
@@ -635,7 +836,7 @@
 </section>
 
 <!-- Games -->
-<section id="games" class="section museum-section">
+<section id="games" class="section">
   <div class="container">
     <h2 class="section-title">Games</h2>
     <p class="section-subtitle">Check out my interactive game projects</p>
@@ -753,6 +954,12 @@
       </div>
     </div>
   </div>
+
+  <!-- BALON -->
+  <div class="heart heart1"></div>
+  <div class="heart heart2"></div>
+  <div class="heart heart3"></div>
+  
 </section>
 
 <!-- ======= AI ASSISTANT ======= -->
@@ -1123,6 +1330,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // Simple script to handle video loading fallback
+    document.addEventListener('DOMContentLoaded', function() {
+      const video = document.querySelector('.hero-video');
+      
+      // If video fails to load, set a fallback background
+      video.addEventListener('error', function() {
+        document.querySelector('.hero').style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        video.style.display = 'none';
+      });
+    });
+
+
   // Wait for the DOM to be fully loaded
   document.addEventListener ('DOMContentLoaded', function() {
     // Hide loader when page is loaded
@@ -1199,10 +1418,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 </script>
-
 </body>
 </html>
-
 
 
 
