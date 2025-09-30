@@ -1,569 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Metadata dasar -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zahra's Portfolio</title>
+
+  <!-- SEO meta -->
+  <meta name="description" content="Portofolio Zahra - UI/UX Designer, Programmer, dan Penulis.">
+  <meta name="keywords" content="Zahra, Portfolio, UI UX, Web Design, Programming, Blogging">
+  <meta name="author" content="Zahra">
+
+  <!-- Bootstrap & Font Awesome -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary-color: #ff4081;
-      --secondary-color: #a777e3;
-      --dark-color: #212529;
-      --light-color: #f8f9fa;
-      --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    }
-    
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      overflow-x: hidden;
-      color: #333;
-    }
-    
-    /* Navbar Styles */
-    .navbar {
-      transition: all 0.5s ease;
-      background: rgba(0,0,0,0.3);
-      backdrop-filter: blur(10px);
-      padding: 15px 0;
-    }
-    
-    .navbar.scrolled {
-      background: rgba(0,0,0,0.9);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      padding: 10px 0;
-    }
-    
-    .navbar-brand, .nav-link {
-      color: var(--primary-color) !important;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-    
-    .nav-link {
-      position: relative;
-      margin: 0 10px;
-    }
-    
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: 0;
-      left: 0;
-      background-color: var(--primary-color);
-      transition: width 0.3s ease;
-    }
-    
-    .nav-link:hover::after {
-      width: 100%;
-    }
-    
-    /* HERO SECTION */
-    .hero {
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-    }
-    
-    .hero-video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      transform: translateX(-50%) translateY(-50%);
-      z-index: 1;
-      object-fit: cover;
-    }
-    
-    .hero-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 2;
-    }
-    
-    .hero-content {
-      position: relative;
-      z-index: 3;
-      color: white;
-      text-align: center;
-      padding: 0 20px;
-    }
-    
-    .hero h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeInDown 1s ease forwards;
-    }
-    
-    .hero .lead {
-      font-size: 1.3rem;
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeInUp 1s ease 0.5s forwards;
-    }
-    
-    .hero-buttons {
-      opacity: 0;
-      animation: fadeInUp 1s ease 1s forwards;
-    }
-    
-    .btn-dark {
-      background-color: var(--dark-color);
-      border-color: var(--dark-color);
-      border-radius: 30px;
-      padding: 12px 30px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-dark:hover {
-      background-color: #23272b;
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    }
-    
-    .btn-danger {
-      background-color: var(--primary-color);
-      border-color: var(--primary-color);
-      border-radius: 30px;
-      padding: 12px 30px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-danger:hover {
-      background-color: #ff2a40;
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(255, 76, 96, 0.3);
-    }
-    
-    .hero-image {
-      position: relative;
-      z-index: 3;
-      text-align: center;
-      opacity: 0;
-      animation: fadeInRight 1s ease 1.5s forwards;
-    }
-    
-    .hero-image img {
-      max-width: 100%;
-      border-radius: 10px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-      transform: perspective(1000px) rotateY(-10deg);
-      transition: transform 0.5s ease;
-    }
-    
-    .hero-image img:hover {
-      transform: perspective(1000px) rotateY(0deg);
-    }
-    
-    /* Animations */
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes fadeInRight {
-      from {
-        opacity: 0;
-        transform: translateX(50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-    
-    /* Responsive Adjustments */
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 2.5rem;
-      }
-      
-      .hero .lead {
-        font-size: 1.1rem;
-      }
-      
-      .hero-buttons .btn {
-        display: block;
-        width: 100%;
-        margin-bottom: 15px;
-      }
-      
-      .hero-buttons .me-3 {
-        margin-right: 0 !important;
-      }
-      
-      .hero-image {
-        margin-top: 40px;
-      }
-      
-      .hero-image img {
-        transform: perspective(1000px) rotateY(0deg);
-        max-width: 80%;
-      }
-    }
 
-    /* Section Styles */
-    .section {
-      padding: 100px 0;
-      position: relative;
-    }
-    
-    .section-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      text-align: center;
-      position: relative;
-      padding-bottom: 15px;
-    }
-    
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 4px;
-      background: var(--gradient);
-      border-radius: 2px;
-    }
-    
-    .section-subtitle {
-      text-align: center;
-      margin-bottom: 60px;
-      color: #6c757d;
-    }
-    
-    /* Card Styles */
-    .card {
-      border: none;
-      border-radius: 15px;
-      transition: all 0.4s ease;
-      overflow: hidden;
-      height: 100%;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    
-    .card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-    }
-    
-    .card-body {
-      padding: 25px;
-    }
-    
-    .card-title {
-      font-weight: 600;
-      margin-bottom: 15px;
-      color: var(--dark-color);
-    }
-    
-    /* Button Styles */
-    .btn {
-      border-radius: 50px;
-      padding: 12px 30px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-    }
-    
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 0%;
-      height: 100%;
-      background: var(--gradient);
-      transition: all 0.5s ease;
-      z-index: -1;
-    }
-    
-    .btn:hover::before {
-      width: 100%;
-    }
-    
-    .btn-dark, .btn-light, .btn-danger {
-      border: none;
-      position: relative;
-    }
-    
-    .btn-dark {
-      background: var(--dark-color);
-    }
-    
-    .btn-danger {
-      background: var(--primary-color);
-    }
-    
-    .btn-dark:hover, .btn-light:hover, .btn-danger:hover {
-      background: transparent;
-      color: white !important;
-    }
-    
-    /* Museum Section */
-    .museum-section {
-      background: linear-gradient(to bottom, #ffe4ef, #fff);
-    }
-    
-    /* Contact Section */
-    .contact-card {
-      padding: 25px;
-      border-radius: 15px;
-      text-align: center;
-      transition: all 0.3s ease;
-      height: 100%;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    }
-    
-    .contact-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    }
-    
-    .contact-card i {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    /* Form Styles */
-    .form-control {
-      border-radius: 10px;
-      padding: 15px 20px;
-      border: 2px solid #e9ecef;
-      transition: all 0.3s ease;
-    }
-    
-    .form-control:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.25rem rgba(255, 64, 129, 0.25);
-    }
-    
-    /* Footer */
-    footer {
-      background: var(--gradient);
-      color: white;
-      text-align: center;
-      padding: 30px 0;
-    }
-    
-    /* Animations */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .animate {
-      animation: fadeInUp 0.8s ease forwards;
-    }
-    
-    .delay-1 {
-      animation-delay: 0.2s;
-    }
-    
-    .delay-2 {
-      animation-delay: 0.4s;
-    }
-    
-    .delay-3 {
-      animation-delay: 0.6s;
-    }
-    
-    /* Back to Top Button */
-    .back-to-top {
-      position: fixed;
-      bottom: 30px;
-      left: 30px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--gradient);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.4s ease;
-      z-index: 999;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-    
-    .back-to-top.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .back-to-top:hover {
-      transform: translateY(-5px);
-    }
-    
-    /* Loading Animation */
-    .loader-wrapper {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: all 0.5s ease;
-    }
-    
-    .loader {
-      width: 50px;
-      height: 50px;
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid var(--primary-color);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    /* Responsive Adjustments */
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 2.5rem;
-      }
-      
-      .section-title {
-        font-size: 2rem;
-      }
-      
-      .hero img {
-        margin-top: 30px;
-      }
-    }
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
 
-    /* SCROLLING TEXT */
-    .scrolling-text {
-      white-space: nowrap;
-      overflow: hidden;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--primary-color);
-      background: #fff;
-      padding: 15px 0;
-      border-top: 1px solid #f0f0f0;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    
-    .scrolling-text span {
-      display: inline-block;
-      padding: 0 30px;
-      animation: scroll-left 20s linear infinite;
-    }
-    
-    @keyframes scroll-left {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
+  <meta http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+        style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com;
+        font-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.gstatic.com;
+        img-src 'self' data: https:;
+        media-src 'self' https://cdn.pixabay.com https://*.spotifycdn.com https://*.scdn.co;
+        frame-src 'self' https://www.youtube.com https://open.spotify.com https://collshp.com https://www.figma.com https://ra-ra277.github.io;
+        connect-src 'self';
+      ">
 
-    
-    /* BALON TERBANG */
-    .heart {
-      position: fixed;
-      bottom: -100px;
-      width: 60px;
-      height: 80px;
-      background: radial-gradient(circle at 30% 30%, #ff77ed, #ff009d);
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      animation: floatUp 15s linear infinite;
-      z-index: 1;
-      opacity: 0.8;
-    }
-    
-    .heart::after {
-      content: "";
-      position: absolute;
-      bottom: -20px;
-      left: 50%;
-      width: 2px;
-      height: 25px;
-      background: #555;
-    }
-    
-    .heart1 { left: 15%; animation-delay: 0s; }
-    .heart2 { left: 45%; animation-delay: 5s; width: 50px; height: 70px; }
-    .heart3 { left: 75%; animation-delay: 10s; width: 40px; height: 60px; }
-    
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0.9; }
-      50% { transform: translateY(-400px) scale(1.05) rotate(5deg); opacity: 1; }
-      100% { transform: translateY(-800px) scale(1) rotate(-5deg); opacity: 0; }
-    }
-  </style>
+
+  <!-- Favicon -->
+  <link rel="icon" href="aset/favicon.ico" type="image/png">
 </head>
+
+
 <body>
 
-<!-- Loading Screen -->
-<div class="loader-wrapper">
-  <div class="loader"></div>
-</div>
+  <!-- Loading Screen -->
+  <div class="loader-wrapper">
+    <div class="loader"></div>
+  </div>
 
-<!-- Back to Top Button -->
-<a href="#home" class="back-to-top">
-  <i class="fas fa-arrow-up"></i>
-</a>
+  <!-- Back to Top Button -->
+  <a href="#home" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </a>
 
-<!-- Navbar -->
+  <!-- Navbar -->
 <nav class="navbar navbar-expand-lg fixed-top">
   <div class="container">
     <a class="navbar-brand" href="#">MyPortfolio</a>
@@ -586,7 +72,7 @@
 </nav>
 
  <!-- Hero Section -->
-  <section id="home" class="hero">
+<section id="home" class="hero">
     <video autoplay muted loop class="hero-video">
       <source src="https://cdn.pixabay.com/video/2024/05/18/212404_large.mp4" type="video/mp4">
       Your browser does not support the video tag.
@@ -612,7 +98,7 @@
         </div>
       </div>
     </div>
-  </section>
+</section>
 
 <!-- SCROLLING CATEGORY -->
 <section>
@@ -954,487 +440,42 @@
       </div>
     </div>
   </div>
-
-  <!-- BALON -->
-  <div class="heart heart1"></div>
-  <div class="heart heart2"></div>
-  <div class="heart heart3"></div>
-  
 </section>
 
-<!-- ======= AI ASSISTANT ======= -->
-<div id="ai-assistant">
-  <button id="ai-button">AI</button>
-  <div id="ai-chat-container">
-    <div id="ai-chat-header">
-      <h3>AI Assistant Zahra</h3>
-      <button id="ai-close">✕</button>
-    </div>
-    <div id="ai-chat-messages">
-      <div class="message ai-message">Halo! Saya AI assistant Zahra. Ada yang bisa saya bantu tentang portofolio atau project programming?</div>
-    </div>
-    <div id="ai-chat-input">
-      <input type="text" id="ai-user-input" placeholder="Tulis pesan...">
-      <button id="ai-send">Kirim</button>
-    </div>
-  </div>
-</div>
-
-<style>
-  /* AI Assistant Styles */
-  #ai-assistant {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-  }
-  
-  #ai-button {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    color: white;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    font-size: 24px;
-    transition: all 0.3s ease;
-  }
-  
-  #ai-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-  }
-  
-  #ai-chat-container {
-    display: none;
-    width: 320px;
-    height: 420px;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    flex-direction: column;
-    overflow: hidden;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    position: absolute;
-    bottom: 70px;
-    right: 0;
-  }
-  
-  #ai-chat-header {
-    padding: 16px;
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  #ai-chat-header h3 {
-    margin: 0;
-    font-size: 16px;
-  }
-  
-  #ai-close {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 20px;
-    padding: 4px 8px;
-    border-radius: 50%;
-    transition: background 0.2s;
-  }
-  
-  #ai-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-  
-  #ai-chat-messages {
-    flex: 1;
-    padding: 16px;
-    overflow-y: auto;
-    background: #f8f9fa;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .message {
-    padding: 12px 16px;
-    border-radius: 18px;
-    max-width: 80%;
-    line-height: 1.4;
-    animation: fadeIn 0.3s ease;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .user-message {
-    background: #6e8efb;
-    color: white;
-    margin-left: auto;
-    border-bottom-right-radius: 6px;
-  }
-  
-  .ai-message {
-    background: #e9ecef;
-    color: #333;
-    margin-right: auto;
-    border-bottom-left-radius: 6px;
-  }
-  
-  #ai-chat-input {
-    display: flex;
-    padding: 12px;
-    border-top: 1px solid #dee2e6;
-    background: white;
-    gap: 8px;
-  }
-  
-  #ai-user-input {
-    flex: 1;
-    padding: 10px 16px;
-    border: 1px solid #ced4da;
-    border-radius: 20px;
-    outline: none;
-    font-family: inherit;
-    transition: border-color 0.3s;
-  }
-  
-  #ai-user-input:focus {
-    border-color: #6e8efb;
-  }
-  
-  #ai-send {
-    padding: 10px 16px;
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-  
-  #ai-send:hover {
-    opacity: 0.9;
-    transform: scale(1.05);
-  }
-  
-  #ai-send:disabled {
-    background: #ced4da;
-    cursor: not-allowed;
-    transform: none;
-  }
-  
-  .typing-indicator {
-    display: flex;
-    padding: 12px 16px;
-    background: #e9ecef;
-    border-radius: 18px;
-    margin-right: auto;
-    border-bottom-left-radius: 6px;
-    gap: 4px;
-  }
-  
-  .typing-dot {
-    width: 8px;
-    height: 8px;
-    background: #6c757d;
-    border-radius: 50%;
-    animation: typingAnimation 1.4s infinite;
-  }
-  
-  .typing-dot:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  
-  .typing-dot:nth-child(3) {
-    animation-delay: 0.4s;
-  }
-  
-  @keyframes typingAnimation {
-    0%, 60%, 100% { transform: translateY(0); }
-    30% { transform: translateY(-4px); }
-  }
-</style>
-
-<script>
-    
-// JavaScript untuk AI Assistant
-document.addEventListener('DOMContentLoaded', function() {
-  // Elemen UI
-  const aiButton = document.getElementById('ai-button');
-  const aiChatContainer = document.getElementById('ai-chat-container');
-  const aiClose = document.getElementById('ai-close');
-  const aiChatMessages = document.getElementById('ai-chat-messages');
-  const aiUserInput = document.getElementById('ai-user-input');
-  const aiSend = document.getElementById('ai-send');
-  
-  // Toggle chat window
-  aiButton.addEventListener('click', () => {
-    aiChatContainer.style.display = aiChatContainer.style.display === 'flex' ? 'none' : 'flex';
-    if (aiChatContainer.style.display === 'flex') {
-      aiUserInput.focus();
-    }
-  });
-  
-  aiClose.addEventListener('click', () => {
-    aiChatContainer.style.display = 'none';
-  });
-  
-  // Fungsi untuk menampilkan indikator typing
-  function showTypingIndicator() {
-    const typingDiv = document.createElement('div');
-    typingDiv.classList.add('typing-indicator');
-    typingDiv.innerHTML = `
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-    `;
-    aiChatMessages.appendChild(typingDiv);
-    aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
-    return typingDiv;
-  }
-  
-  // Knowledge base untuk AI Assistant
-  const knowledgeBase = {
-    greetings: ["halo", "hai", "hi", "hello", "hei", "hola", "hey", "apa kabar"],
-    skills: ["skill", "kemampuan", "keahlian", "bisa apa", "expertise", "ability", "teknologi", "teknis"],
-    projects: ["project", "proyek", "karya", "portfolio", "pekerjaan", "hasil kerja", "aplikasi", "website"],
-    contact: ["kontak", "hubungi", "email", "telepon", "whatsapp", "media sosial", "sosmed", "instagram", "linkedin"],
-    thanks: ["terima kasih", "thanks", "thank you", "makasih", "thx", "gracias"],
-    help: ["bantuan", "help", "bantu", "tolong", "caranya", "how to", "how do", "cara"],
-    education: ["pendidikan", "education", "sekolah", "kuliah", "lulusan", "almamater", "kampus", "universitas"],
-    experience: ["pengalaman", "experience", "kerja", "bekerja", "pekerjaan", "karir", "pengalaman kerja"],
-    services: ["jasa", "service", "layanan", "freelance", "freelancer", "harga", "bayaran", "upah"],
-    about: ["tentang", "about", "siapa", "perkenalan", "intro", "perkenalkan"]
-  };
-  
-  // Responses untuk AI Assistant
-  const responses = {
-    greeting: "Halo! Senang bertemu dengan Anda. Ada yang bisa saya bantu tentang portofolio Zahra?",
-    skill: "Zahra memiliki kemampuan dalam HTML, CSS dan JavaScript. Dia juga sedang mempelajari machine learning dan AI development. Skill utamanya adalah UI/UX designer dan frontend development.",
-    project: "Zahra telah mengerjakan beberapa project termasuk website portofolio ini, aplikasi todo list, website e-commerce sederhana, dan beberapa project machine learning dasar. Semua project bisa dilihat di halaman project portofolio ini.",
-    contact: "Anda dapat menghubungi Zahra melalui email: zyulear27@gmail.com. Jangan ragu untuk menghubungi! Zahra senang berkolaborasi dalam project menarik.",
-    thanks: "Sama-sama! Senang bisa membantu. Jika ada pertanyaan lagi, silakan tanyakan saja. Jangan lupa cek project-project Zahra ya!",
-    help: "Saya di sini untuk membantu menjawab pertanyaan tentang Zahra. Anda bisa menanyakan tentang skill, project, pengalaman, pendidikan, atau cara menghubungi Zahra.",
-    education: "Zahra adalah mahasiswi dari Universitas Muhammadiyah Purwekerto Semester 5. Dia aktif dalam membuat project-project kecil dan sering mengikuti perkembangan inovasi teknologi.",
-    experience: "Zahra memiliki pengalaman magang sebagai UI/UX designer dan web developer di Upwork. Dia juga aktif dalam project freelance dan open source. Saat ini Zahra sedang mencari opportunities sebagai UI/UX designer dan frontend developer.",
-    services: "Zahra menerima jasa pembuatan website dan aplikasi web. Untuk informasi lebih lanjut tentang layanan dan harga, silakan hubungi Zahra langsung melalui email.",
-    about: "Zahra adalah seorang UI/UX designer dan programmer pemula yang passionate terhadap teknologi web dan AI. Selain coding, Zahra juga suka menulis artikel tech dan berbagi pengetahuan di blog pribadi.",
-    default: "Maaf, saya tidak mengerti pertanyaan Anda. Cukup ketik skill, freelance, project, pengalaman, pendidikan, atau cara menghubungi Zahra. Atau mungkin Anda bisa menjelaskan dengan cara berbeda?",
-  };
-  
-  // Fungsi untuk memahami pesan pengguna
-  function understandMessage(message) {
-    const lowerMessage = message.toLowerCase();
-    
-    if (knowledgeBase.greetings.some(word => lowerMessage.includes(word))) {
-      return "greeting";
-    } else if (knowledgeBase.skills.some(word => lowerMessage.includes(word))) {
-      return "skill";
-    } else if (knowledgeBase.projects.some(word => lowerMessage.includes(word))) {
-      return "project";
-    } else if (knowledgeBase.contact.some(word => lowerMessage.includes(word))) {
-      return "contact";
-    } else if (knowledgeBase.thanks.some(word => lowerMessage.includes(word))) {
-      return "thanks";
-    } else if (knowledgeBase.help.some(word => lowerMessage.includes(word))) {
-      return "help";
-    } else if (knowledgeBase.education.some(word => lowerMessage.includes(word))) {
-      return "education";
-    } else if (knowledgeBase.experience.some(word => lowerMessage.includes(word))) {
-      return "experience";
-    } else if (knowledgeBase.services.some(word => lowerMessage.includes(word))) {
-      return "services";
-    } else if (knowledgeBase.about.some(word => lowerMessage.includes(word))) {
-      return "about";
-    } else {
-      return "default";
-    }
-  }
-  
-  // Fungsi untuk menghasilkan respons AI
-  function generateAIResponse(message) {
-    const intent = understandMessage(message);
-    return responses[intent] || responses.default;
-  }
-  
-  // Fungsi untuk mengirim pesan ke AI (rule-based)
-  async function sendMessageToAI(message) {
-    // Simulasi delay seperti AI sedang memproses
-    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 700));
-    
-    // Generate respons berdasarkan aturan
-    return generateAIResponse(message);
-  }
-  
-  // Fungsi untuk menambahkan pesan ke chat
-  function addMessage(text, isUser) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message');
-    messageDiv.classList.add(isUser ? 'user-message' : 'ai-message');
-    messageDiv.textContent = text;
-    aiChatMessages.appendChild(messageDiv);
-    aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
-  }
-  
-  // Event listener untuk mengirim pesan
-  aiSend.addEventListener('click', async () => {
-    const message = aiUserInput.value.trim();
-    if (message) {
-      addMessage(message, true);
-      aiUserInput.value = '';
-      aiSend.disabled = true;
-      
-      // Tampilkan indikator typing
-      const typingIndicator = showTypingIndicator();
-      
-      // Kirim ke AI dan dapatkan balasan
-      const reply = await sendMessageToAI(message);
-      
-      // Hapus indikator typing dan tampilkan balasan
-      aiChatMessages.removeChild(typingIndicator);
-      addMessage(reply, false);
-      aiSend.disabled = false;
-    }
-  });
-  
-  // Juga kirim dengan Enter key
-  aiUserInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      aiSend.click();
-    }
-  });
-});
-</script>
-<!-- ======= END AI ASSISTANT ======= -->
-
-<!-- Footer -->
-<footer class="animate">
-  <div class="container">
-    <p>© 2025 ZYR - All Rights Reserved</p>
-    <div class="mt-3">
-      <a href="#" class="text-light mx-2"><i class="fab fa-instagram fa-lg"></i></a>
-      <a href="#" class="text-light mx-2"><i class="far fa-envelope fa-lg"></i></a>
-      <a href="#" class="text-light mx-2"><i class="fab fa-linkedin fa-lg"></i></a>
-      <a href="#" class="text-light mx-2"><i class="fab fa-github fa-lg"></i></a>
+  <!-- ======= AI ASSISTANT ======= -->
+  <div id="ai-assistant">
+    <button id="ai-button">AI</button>
+    <div id="ai-chat-container">
+      <div id="ai-chat-header">
+        <h3>AI Assistant Zahra</h3>
+        <button id="ai-close">✕</button>
+      </div>
+      <div id="ai-chat-messages">
+        <div class="message ai-message">Halo! Saya AI assistant Zahra. Ada yang bisa saya bantu tentang portofolio atau project programming?</div>
+      </div>
+      <div id="ai-chat-input">
+        <input type="text" id="ai-user-input" placeholder="Tulis pesan...">
+        <button id="ai-send">Kirim</button>
+      </div>
     </div>
   </div>
-</footer>
+  <!-- ======= END AI ASSISTANT ======= -->
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // Simple script to handle video loading fallback
-    document.addEventListener('DOMContentLoaded', function() {
-      const video = document.querySelector('.hero-video');
-      
-      // If video fails to load, set a fallback background
-      video.addEventListener('error', function() {
-        document.querySelector('.hero').style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-        video.style.display = 'none';
-      });
-    });
+  <!-- Footer -->
+  <footer class="animate">
+    <div class="container">
+      <p>© 2025 ZYR - All Rights Reserved</p>
+      <div class="mt-3">
+        <a href="#" class="text-light mx-2"><i class="fab fa-instagram fa-lg"></i></a>
+        <a href="#" class="text-light mx-2"><i class="far fa-envelope fa-lg"></i></a>
+        <a href="#" class="text-light mx-2"><i class="fab fa-linkedin fa-lg"></i></a>
+        <a href="#" class="text-light mx-2"><i class="fab fa-github fa-lg"></i></a>
+      </div>
+    </div>
+  </footer>
 
-
-  // Wait for the DOM to be fully loaded
-  document.addEventListener ('DOMContentLoaded', function() {
-    // Hide loader when page is loaded
-    setTimeout(function() {
-      document.querySelector('.loader-wrapper').style.opacity = '0';
-      setTimeout(function() {
-        document.querySelector('.loader-wrapper').style.display = 'none';
-      }, 500);
-    }, 1000);
-    
-    // Navbar scroll effect
-    window.addEventListener('scroll', function() {
-      const navbar = document.querySelector('.navbar');
-      const backToTop = document.querySelector('.back-to-top');
-      
-      if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-        backToTop.classList.add('active');
-      } else {
-        navbar.classList.remove('scrolled');
-        backToTop.classList.remove('active');
-      }
-    });
-    
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
-    
-    // Animation on scroll
-    const animateElements = document.querySelectorAll('.animate');
-    
-    function checkScroll() {
-      animateElements.forEach(element => {
-        const elementPosition = element.getBoundingClientRect().top;
-        const screenPosition = window.innerHeight / 1.3;
-        
-        if (elementPosition < screenPosition) {
-          element.style.opacity = '1';
-          element.style.transform = 'translateY(0)';
-        }
-      });
-    }
-
-    // Initial check
-    checkScroll();
-    
-    // Check on scroll
-    window.addEventListener('scroll', checkScroll);
-    
-    // Form submission
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-      contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // In a real application, you would send the form data to a server here
-        alert('Thank you for your message! I will get back to you soon.');
-        contactForm.reset();
-      });
-    }
-  });
-</script>
+  <!-- Bootstrap & Custom JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
