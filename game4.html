@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Labirin Aksara: Menyusun Jejak, Menjaga Tradisi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+Javanese&family=Noto+Sans+Balinese&family=Noto+Sans+Buginese&display=swap');
+
+        :root {
+            --bg-color: #2c241b;
+            --ui-brown: #5d4037;
+            --ui-gold: #ffb74d;
+            --ui-green: #558b2f;
+            --text-color: #efebe9;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Press Start 2P', monospace;
+            overflow: hidden;
+            touch-action: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            background: #000;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated; /* Retro feel */
+        }
+
+        /* UI Overlays */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(44, 36, 27, 0.9);
+            z-index: 10;
+            text-align: center;
+            transition: opacity 0.3s;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1 {
+            color: var(--ui-gold);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px #000;
+            line-height: 1.5;
+        }
+
+        p {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 80%;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        button {
+            background: var(--ui-green);
+            border: 2px solid var(--ui-gold);
+            color: white;
+            padding: 15px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin: 5px;
+            box-shadow: 0 4px #2e4a16;
+            transition: transform 0.1s;
+        }
+
+        button:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 #2e4a16;
+        }
+
+        /* Puzzle Modal */
+        #puzzle-modal {
+            background: rgba(0, 0, 0, 0.85);
+            border: 4px solid var(--ui-gold);
+            padding: 20px;
+            width: 70%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            flex-direction: column;
+            z-index: 20;
+        }
+
+        .aksara-btn {
+            background: var(--ui-brown);
+            font-family: 'Noto Sans Javanese', 'Noto Sans Balinese', 'Noto Sans Buginese', serif; /* Fallback fonts */
+            font-size: 1.5rem;
+            margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+        }
+
+        /* HUD */
+        #hud {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: calc(100% - 20px);
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 5;
+            font-size: 0.8rem;
+            text-shadow: 1px 1px #000;
+        }
+
+        .hearts { color: #e53935; }
+        .level-tag { color: var(--ui-gold); }
+
+        /* Touch Controls */
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            height: 100px;
+            display: none; /* Shown via JS on touch devices */
+            pointer-events: none; /* Let clicks pass through empty space */
+            z-index: 30;
+        }
+
+        .control-btn {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            user-select: none;
+        }
+
+        .btn-left { left: 20px; bottom: 10px; }
+        .btn-right { left: 90px; bottom: 10px; }
+        .btn-jump { right: 20px; bottom: 10px; background: rgba(255, 183, 77, 0.3); border-color: var(--ui-gold); }
+
+        /* Pustaka Styling */
+        .pustaka-entry {
+            background: #3e2723;
+            border: 1px solid var(--ui-gold);
+            padding: 10px;
+            margin: 5px;
+            text-align: left;
+            width: 90%;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .aksara-large {
+            font-size: 2rem;
+            color: var(--ui-gold);
+            margin-right: 10px;
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            #controls { display: block; }
+            p { font-size: 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <canvas id="gameCanvas" width="640" height="360"></canvas>
+
+        <!-- HUD -->
+        <div id="hud">
+            <span id="level-display" class="level-tag">LEVEL 1: JAWA</span>
+            <span id="lives-display" class="hearts">❤❤❤</span>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay">
+            <h1>LABIRIN AKSARA</h1>
+            <p>"Menyusun Jejak, Menjaga Tradisi"</p>
+            <p style="color: #bbb; font-size: 0.6rem;">Gunakan Panah / WASD untuk bergerak.<br>Spasi untuk lompat.</p>
+            <button id="btn-start">MULAI PETUALANGAN</button>
+        </div>
+
+        <!-- Puzzle Interface -->
+        <div id="puzzle-modal">
+            <h2 id="puzzle-question" style="color:white; font-size: 1rem; margin-bottom: 15px;">Terjemahkan: NASI</h2>
+            <div id="puzzle-options">
+                <!-- Buttons injected by JS -->
+            </div>
+        </div>
+
+        <!-- Game Over / Level Complete -->
+        <div id="message-screen" class="overlay hidden">
+            <h1 id="msg-title">Level Selesai!</h1>
+            <p id="msg-desc">Gerbang terbuka.</p>
+            <button id="btn-next">LANJUT</button>
+        </div>
+
+        <!-- Pustaka Budaya (Ending) -->
+        <div id="pustaka-screen" class="overlay hidden">
+            <h1 style="color:var(--ui-gold)">PUSTAKA BUDAYA</h1>
+            <p>"Warisan ini tidak punah selama kita masih mengejanya."</p>
+            <div id="pustaka-content" style="width: 100%; display: flex; flex-direction: column; align-items: center; overflow-y: auto; height: 50%;">
+                <!-- Content injected -->
+            </div>
+            <button onclick="location.reload()">KEMBALI KE AWAL</button>
+        </div>
+
+        <!-- Touch Controls -->
+        <div id="controls">
+            <div class="control-btn btn-left" id="btn-left">←</div>
+            <div class="control-btn btn-right" id="btn-right">→</div>
+            <div class="control-btn btn-jump" id="btn-jump">↑</div>
+        </div>
+    </div>
+
+<script>
+/**
+ * AUDIO SYSTEM (Lo-Fi Gamelan Synth)
+ * Menggunakan Web Audio API untuk menghindari ketergantungan file eksternal.
+ */
+class AudioEngine {
+    constructor() {
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.value = 0.3;
+        this.masterGain.connect(this.ctx.destination);
+        this.isPlaying = false;
+        this.loopInterval = null;
+    }
+
+    playNote(freq, type = 'sine', duration = 1, decay = 1) {
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        
+        // Envelope
+        gain.gain.setValueAtTime(0, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.5, this.ctx.currentTime + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + duration);
+    }
+
+    playGamelanNote(freq) {
+        // Metallic sound simulation
+        this.playNote(freq, 'sine', 1.5);
+        this.playNote(freq * 2.02, 'triangle', 0.8); // Overtone
+    }
+
+    playJump() {
+        this.playNote(400, 'square', 0.1);
+        const osc = this.ctx.createOscillator();
+        osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(600, this.ctx.currentTime + 0.1);
+        osc.connect(this.masterGain);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.1);
+    }
+
+    playCorrect() {
+        this.playNote(880, 'sine', 0.2);
+        setTimeout(() => this.playNote(1100, 'sine', 0.4), 100);
+    }
+
+    playWrong() {
+        this.playNote(150, 'sawtooth', 0.5);
+    }
+
+    startBGM() {
+        if (this.isPlaying) return;
+        this.isPlaying = true;
+        
+        // Pelog-ish scale approximation
+        const scale = [523.25, 587.33, 659.25, 783.99, 880.00]; 
+        let noteIdx = 0;
+
+        this.loopInterval = setInterval(() => {
+            // Randomly play notes from scale to simulate generative lo-fi
+            if (Math.random() > 0.4) {
+                const note = scale[Math.floor(Math.random() * scale.length)];
+                // Octave variation
+                const octave = Math.random() > 0.8 ? 0.5 : 1;
+                this.playGamelanNote(note * octave);
+            }
+            
+            // Simple beat
+            if (noteIdx % 4 === 0) {
+                 // Kick-ish
+                 this.playNote(100, 'triangle', 0.1);
+            }
+            noteIdx++;
+        }, 500); // 120 BPM-ish
+    }
+    
+    stopBGM() {
+        clearInterval(this.loopInterval);
+        this.isPlaying = false;
+    }
+}
+
+/**
+ * GAME ENGINE
+ */
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const audio = new AudioEngine();
+
+// Config
+const GRAVITY = 0.5;
+const JUMP_FORCE = -8;
+const SPEED = 3;
+
+// Game State
+let gameState = 'START'; // START, PLAY, PUZZLE, END
+let currentLevelIdx = 0;
+let lives = 3;
+let score = 0;
+let puzzleActive = false;
+let unlockedLore = [];
+
+// Assets / Data
+const LEVELS = [
+    {
+        name: "JAWA (Mataraman)",
+        bgGradient: ['#4e342e', '#2e7d32'], // Earth & Forest
+        accent: '#8d6e63',
+        groundColor: '#3e2723',
+        puzzles: [
+            { word: "NASI", correct: "ꦱꦼꦒ", options: ["ꦱꦼꦒ", "ꦲꦺꦴꦩꦃ", "ꦩꦔꦤ"], correctRead: "Sega" },
+            { word: "RUMAH", correct: "ꦲꦺꦴꦩꦃ", options: ["ꦧꦚꦸ", "ꦲꦺꦴꦩꦃ", "ꦒꦸꦭ"], correctRead: "Omah" }
+        ],
+        platforms: [] 
+    },
+    {
+        name: "BALI (Dewata)",
+        bgGradient: ['#ff9800', '#00bcd4'], // Sunset & Sea
+        accent: '#ffd54f',
+        groundColor: '#e65100',
+        puzzles: [
+            { word: "AIR", correct: "ᬢᬶᬃᬢ", options: ["ᬢᬶᬃᬢ", "ᬭᬳᬚᭂᬂ", "ᬫᬢ"], correctRead: "Tirta" },
+            { word: "SELAMAT", correct: "ᬭᬳᬚᭂᬂ", options: ["ᬧᬲᬃ", "ᬭᬳᬚᭂᬂ", "ᬚᬮᬦ᭄"], correctRead: "Rahajeng" }
+        ],
+        platforms: []
+    },
+    {
+        name: "SULSEL (Anging Mammiri)",
+        bgGradient: ['#37474f', '#90caf9'], // Karst & Sky
+        accent: '#cfd8dc',
+        groundColor: '#455a64',
+        puzzles: [
+            { word: "GUNUNG", correct: "ᨅᨗᨒᨘ", options: ["ᨅᨗᨒᨘ", "ᨔᨗᨑᨗ", "ᨒᨚᨄ"], correctRead: "Bulu" },
+            { word: "HARGA DIRI", correct: "ᨔᨗᨑᨗ", options: ["ᨅᨒ", "ᨔᨗᨑᨗ", "ᨆᨀ"], correctRead: "Siri'" }
+        ],
+        platforms: []
+    }
+];
+
+// Entities
+class Player {
+    constructor() {
+        this.width = 20;
+        this.height = 30;
+        this.x = 50;
+        this.y = 200;
+        this.vx = 0;
+        this.vy = 0;
+        this.grounded = false;
+        this.color = '#ffcc80'; // Skin tone
+    }
+
+    update() {
+        // Physics
+        this.vy += GRAVITY;
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Ground collision (Basic floor)
+        if (this.y + this.height > canvas.height - 40) {
+            this.y = canvas.height - 40 - this.height;
+            this.vy = 0;
+            this.grounded = true;
+        } else {
+            this.grounded = false;
+        }
+
+        // Platform Collision
+        const level = LEVELS[currentLevelIdx];
+        level.platforms.forEach(p => {
+            if (this.x < p.x + p.w &&
+                this.x + this.width > p.x &&
+                this.y + this.height > p.y &&
+                this.y + this.height < p.y + p.h + 10 && // Check top collision only slightly deep
+                this.vy >= 0) {
+                    this.y = p.y - this.height;
+                    this.vy = 0;
+                    this.grounded = true;
+            }
+        });
+
+        // Boundaries
+        if (this.x < 0) this.x = 0;
+        // Don't limit right side, that's progress
+    }
+
+    draw() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        
+        // Arka's Details (Pixel Art approximation)
+        // Headband
+        ctx.fillStyle = '#d84315';
+        ctx.fillRect(this.x, this.y + 4, this.width, 4);
+        // Clothes
+        ctx.fillStyle = '#5d4037'; // Brown shirt
+        ctx.fillRect(this.x, this.y + 10, this.width, 10);
+        ctx.fillStyle = '#fff'; // Sarong pattern
+        ctx.fillRect(this.x + 5, this.y + 20, 10, 10);
+        // Bag
+        ctx.fillStyle = '#ffb74d';
+        ctx.fillRect(this.x + 12, this.y + 12, 6, 8);
+    }
+
+    jump() {
+        if (this.grounded) {
+            this.vy = JUMP_FORCE;
+            this.grounded = false;
+            audio.playJump();
+        }
+    }
+}
+
+class Gate {
+    constructor(x, puzzleIndex) {
+        this.x = x;
+        this.y = canvas.height - 140;
+        this.w = 40;
+        this.h = 100;
+        this.active = true;
+        this.puzzleIndex = puzzleIndex; // Which puzzle to trigger
+        this.glow = 0;
+    }
+
+    draw() {
+        if (!this.active) return;
+        
+        // Pulsing effect
+        this.glow += 0.1;
+        const glowSize = Math.sin(this.glow) * 5;
+
+        // Pillars
+        ctx.fillStyle = '#8d6e63';
+        ctx.fillRect(this.x, this.y, 10, this.h);
+        ctx.fillRect(this.x + 30, this.y, 10, this.h);
+        
+        // Roof
+        ctx.fillStyle = '#5d4037';
+        ctx.beginPath();
+        ctx.moveTo(this.x - 10, this.y);
+        ctx.lineTo(this.x + 50, this.y);
+        ctx.lineTo(this.x + 20, this.y - 20);
+        ctx.fill();
+
+        // Energy Field
+        ctx.fillStyle = `rgba(255, 215, 0, ${0.3 + Math.sin(this.glow)/4})`;
+        ctx.fillRect(this.x + 10, this.y, 20, this.h);
+    }
+}
+
+// Global Variables
+let player = new Player();
+let gates = [];
+let keys = {};
+let cameraX = 0;
+
+// Input Handling
+window.addEventListener('keydown', e => {
+    keys[e.code] = true;
+    if (e.code === 'Space') player.jump();
+});
+window.addEventListener('keyup', e => keys[e.code] = false);
+
+// Touch Controls
+const btnLeft = document.getElementById('btn-left');
+const btnRight = document.getElementById('btn-right');
+const btnJump = document.getElementById('btn-jump');
+
+const addTouchLoop = (elem, code) => {
+    elem.addEventListener('touchstart', (e) => { e.preventDefault(); keys[code] = true; });
+    elem.addEventListener('touchend', (e) => { e.preventDefault(); keys[code] = false; });
+};
+
+addTouchLoop(btnLeft, 'ArrowLeft');
+addTouchLoop(btnRight, 'ArrowRight');
+btnJump.addEventListener('touchstart', (e) => { e.preventDefault(); player.jump(); });
+
+// Level Generation
+function generateLevel(levelIdx) {
+    gates = [];
+    player.x = 50;
+    player.y = 200;
+    cameraX = 0;
+    
+    const levelData = LEVELS[levelIdx];
+    levelData.platforms = [];
+
+    // Procedural generation of simple platforms
+    let currentX = 200;
+    for(let i=0; i<10; i++) {
+        let w = 80 + Math.random() * 50;
+        let h = 20;
+        let y = canvas.height - 40 - (Math.random() * 80 + 20);
+        levelData.platforms.push({x: currentX, y: y, w: w, h: h});
+        currentX += w + 50 + Math.random() * 50; // Gap
+    }
+
+    // Place Gates at specific points
+    // Gate 1 around 1/3 way, Gate 2 near end
+    gates.push(new Gate(600, 0));
+    gates.push(new Gate(1400, 1));
+}
+
+// Puzzle Logic
+function triggerPuzzle(gate) {
+    gameState = 'PUZZLE';
+    puzzleActive = true;
+    keys['ArrowRight'] = false; // Stop movement
+    keys['ArrowLeft'] = false;
+    player.vx = 0;
+
+    const modal = document.getElementById('puzzle-modal');
+    const question = document.getElementById('puzzle-question');
+    const optionsDiv = document.getElementById('puzzle-options');
+    
+    const level = LEVELS[currentLevelIdx];
+    const puzzle = level.puzzles[gate.puzzleIndex];
+
+    question.textContent = `Bahasa Indonesia: "${puzzle.word}"`;
+    optionsDiv.innerHTML = '';
+
+    puzzle.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'aksara-btn';
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(opt, puzzle, gate);
+        optionsDiv.appendChild(btn);
+    });
+
+    modal.style.display = 'flex';
+}
+
+function checkAnswer(selected, puzzle, gate) {
+    const modal = document.getElementById('puzzle-modal');
+    
+    if (selected === puzzle.correct) {
+        // Correct
+        audio.playCorrect();
+        modal.style.display = 'none';
+        gate.active = false;
+        gameState = 'PLAY';
+        
+        // Save lore
+        unlockedLore.push({
+            level: LEVELS[currentLevelIdx].name,
+            indonesia: puzzle.word,
+            aksara: puzzle.correct,
+            read: puzzle.correctRead
+        });
+
+        // Particle effect (Visual only simulation)
+        createParticles(gate.x + 20, gate.y + 50);
+
+    } else {
+        // Wrong
+        audio.playWrong();
+        lives--;
+        updateHUD();
+        // Shake effect
+        modal.style.transform = "translate(-50%, -50%) translateX(10px)";
+        setTimeout(() => modal.style.transform = "translate(-50%, -50%)", 100);
+        
+        if (lives <= 0) {
+            alert("Arka kelelahan! (Game Over - Refresh untuk ulang)");
+            location.reload();
+        }
+    }
+}
+
+// Visual Effects
+let particles = [];
+function createParticles(x, y) {
+    for(let i=0; i<20; i++) {
+        particles.push({
+            x: x, y: y,
+            vx: (Math.random() - 0.5) * 5,
+            vy: (Math.random() - 0.5) * 5,
+            life: 1.0,
+            color: '#ffd700'
+        });
+    }
+}
+
+function drawBackground() {
+    const lvl = LEVELS[currentLevelIdx];
+    
+    // Gradient Sky
+    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grad.addColorStop(0, lvl.bgGradient[0]);
+    grad.addColorStop(1, lvl.bgGradient[1]);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0, canvas.width, canvas.height);
+
+    // Parallax Mountains/Trees (simplified)
+    ctx.fillStyle = `rgba(0,0,0,0.2)`;
+    // Layer 1 (Far)
+    for(let i=0; i<10; i++) {
+        let x = (i * 200) - (cameraX * 0.2) % 2000; 
+        ctx.beginPath();
+        ctx.moveTo(x, canvas.height);
+        ctx.lineTo(x + 100, canvas.height - 150);
+        ctx.lineTo(x + 200, canvas.height);
+        ctx.fill();
+    }
+    
+    // Ground
+    ctx.fillStyle = lvl.groundColor;
+    ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+}
+
+function updateHUD() {
+    document.getElementById('lives-display').innerHTML = "❤".repeat(lives);
+    document.getElementById('level-display').innerText = `LEVEL ${currentLevelIdx + 1}: ${LEVELS[currentLevelIdx].name}`;
+}
+
+function showLevelComplete() {
+    gameState = 'PAUSE';
+    const msg = document.getElementById('message-screen');
+    const title = document.getElementById('msg-title');
+    const desc = document.getElementById('msg-desc');
+    const btn = document.getElementById('btn-next');
+    
+    msg.classList.remove('hidden');
+    
+    if (currentLevelIdx < LEVELS.length - 1) {
+        title.innerText = "Level Selesai!";
+        desc.innerText = "Arka berhasil mengumpulkan aksara.";
+        btn.innerText = "Level Selanjutnya";
+        btn.onclick = () => {
+            currentLevelIdx++;
+            generateLevel(currentLevelIdx);
+            msg.classList.add('hidden');
+            gameState = 'PLAY';
+            updateHUD();
+        };
+    } else {
+        // Ending
+        title.innerText = "Perjalanan Selesai";
+        desc.innerText = "Pustaka Budaya telah terbuka.";
+        btn.innerText = "Masuk Pustaka";
+        btn.onclick = showEnding;
+    }
+}
+
+function showEnding() {
+    document.getElementById('message-screen').classList.add('hidden');
+    const pustaka = document.getElementById('pustaka-screen');
+    const content = document.getElementById('pustaka-content');
+    pustaka.classList.remove('hidden');
+    
+    content.innerHTML = '';
+    unlockedLore.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'pustaka-entry';
+        div.innerHTML = `
+            <div style="display:flex; align-items:center;">
+                <span class="aksara-large">${item.aksara}</span>
+                <div>
+                    <div style="color:#aaa; font-size:0.7rem;">${item.level}</div>
+                    <div style="color:#fff; font-weight:bold;">${item.indonesia}</div>
+                    <div style="color:var(--ui-gold); font-style:italic;">Dibaca: "${item.read}"</div>
+                </div>
+            </div>
+        `;
+        content.appendChild(div);
+    });
+}
+
+// Main Loop
+function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (gameState === 'PLAY') {
+        // Movement Logic
+        if (keys['ArrowRight'] || keys['KeyD']) player.vx = SPEED;
+        else if (keys['ArrowLeft'] || keys['KeyA']) player.vx = -SPEED;
+        else player.vx = 0;
+
+        player.update();
+
+        // Camera Follow
+        if (player.x > canvas.width / 3) {
+            let diff = player.x - canvas.width / 3;
+            cameraX += diff;
+            player.x = canvas.width / 3;
+        }
+
+        // Draw World
+        drawBackground();
+        
+        ctx.save();
+        // Camera shake or offset could go here, but we just move elements relative to cameraX
+        // Actually, simple scrolling: Shift context? No, shift objects.
+        // Let's shift drawing coordinates.
+        
+        // Platforms
+        const level = LEVELS[currentLevelIdx];
+        ctx.fillStyle = level.accent;
+        level.platforms.forEach(p => {
+            ctx.fillRect(p.x - cameraX, p.y, p.w, p.h);
+            // Decorative trim
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.fillRect(p.x - cameraX, p.y + p.h - 5, p.w, 5);
+            ctx.fillStyle = level.accent;
+        });
+
+        // Gates
+        gates.forEach(g => {
+            let drawX = g.x - cameraX;
+            // Draw gate relative to cam
+            if (drawX > -100 && drawX < canvas.width + 100) {
+                // Temporary assign modified x for draw method
+                let originalX = g.x;
+                g.x = drawX;
+                g.draw();
+                g.x = originalX; // Restore
+
+                // Check collision
+                if (g.active && Math.abs((player.x + player.width/2) - (drawX + 20)) < 30) {
+                    triggerPuzzle(g);
+                }
+            }
+        });
+        
+        // Particles
+        particles.forEach((p, idx) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.05;
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.life;
+            ctx.fillRect(p.x - cameraX, p.y, 4, 4);
+            ctx.globalAlpha = 1.0;
+            if(p.life <= 0) particles.splice(idx, 1);
+        });
+
+        player.draw(); // Player is always at fixed screen X roughly
+        ctx.restore();
+
+        // Level End Check
+        if (cameraX > 1600) { // Arbitrary length for demo
+            showLevelComplete();
+        }
+    }
+
+    requestAnimationFrame(loop);
+}
+
+// Initialization
+document.getElementById('btn-start').addEventListener('click', () => {
+    document.getElementById('start-screen').style.display = 'none';
+    audio.startBGM(); // Browser policy requires interaction
+    gameState = 'PLAY';
+    generateLevel(0);
+    loop();
+});
+
+// Initial Setup
+updateHUD();
+
+</script>
+</body>
+</html>
