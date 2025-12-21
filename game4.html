@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Labirin Aksara: Menyusun Jejak, Menjaga Tradisi</title>
+    <title>Labirin Aksara v2.0</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+Javanese&family=Noto+Sans+Balinese&family=Noto+Sans+Buginese&display=swap');
 
@@ -13,6 +13,7 @@
             --wood: #8b5a2b;
             --moss: #4a5d23;
             --cream: #f4e4bc;
+            --red-accent: #cc4444;
         }
 
         body {
@@ -22,7 +23,7 @@
             color: var(--cream);
             font-family: 'Press Start 2P', cursive;
             overflow: hidden;
-            touch-action: none;
+            touch-action: none; /* Prevent scroll on mobile */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -37,13 +38,14 @@
             background: #000;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
             border: 4px solid var(--gold);
+            overflow: hidden;
         }
 
         canvas {
             display: block;
             width: 100%;
             height: 100%;
-            image-rendering: pixelated;
+            image-rendering: pixelated; /* Retro look */
         }
 
         /* UI Overlays */
@@ -57,24 +59,20 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 10px;
+            padding: 15px;
             box-sizing: border-box;
+            z-index: 10;
         }
 
         .hud {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
+            font-size: 14px; /* Larger for readability */
             text-shadow: 2px 2px 0 #000;
         }
 
-        .hud-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        #start-screen, #game-over-screen, #victory-screen, #pustaka-screen {
+        /* Screens (Start, Victory, Game Over) */
+        .screen {
             position: absolute;
             top: 0;
             left: 0;
@@ -88,13 +86,16 @@
             text-align: center;
             pointer-events: auto;
             z-index: 100;
+            transition: opacity 0.3s;
         }
 
-        .hidden { display: none !important; }
+        .hidden { 
+            display: none !important; 
+        }
 
-        h1 { font-size: 24px; color: var(--gold); margin-bottom: 10px; text-transform: uppercase; line-height: 1.5; }
-        h2 { font-size: 16px; color: var(--wood); margin-bottom: 20px; }
-        p { font-size: 10px; line-height: 1.6; max-width: 80%; margin: 10px auto; font-family: 'Arial', sans-serif; }
+        h1 { font-size: 20px; color: var(--gold); margin-bottom: 10px; line-height: 1.5; }
+        h2 { font-size: 14px; color: var(--wood); margin-bottom: 20px; }
+        p { font-size: 10px; line-height: 1.8; max-width: 80%; margin: 10px auto; font-family: 'Arial', sans-serif; color: #ddd; }
 
         .btn {
             background: var(--wood);
@@ -107,11 +108,24 @@
             margin-top: 20px;
             text-transform: uppercase;
             box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
-            transition: transform 0.1s;
         }
+        .btn:hover { background: var(--moss); transform: scale(1.05); }
+        .btn:active { transform: scale(0.95); }
 
-        .btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
-        .btn:hover { background: var(--moss); }
+        /* Level Title Transition */
+        #level-title-overlay {
+            position: absolute;
+            top: 40%;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            color: var(--gold);
+            text-shadow: 3px 3px 0 #000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 90;
+        }
 
         /* Puzzle Interface */
         #puzzle-interface {
@@ -119,130 +133,88 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 80%;
-            height: 80%;
-            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="%23f4e4bc"/><rect x="5" y="5" width="90" height="90" fill="none" stroke="%238b5a2b" stroke-width="2"/></svg>');
-            background-size: cover;
-            border: 4px solid var(--wood);
-            display: none; /* Toggled by JS */
+            width: 85%;
+            height: 85%;
+            background: #f4e4bc;
+            border: 6px solid var(--wood);
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
             pointer-events: auto;
             color: #2c241b;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            z-index: 50;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            z-index: 200;
+            border-radius: 8px;
         }
 
-        .puzzle-word {
-            font-size: 24px;
+        .puzzle-header {
+            background: var(--wood);
+            color: var(--cream);
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: -20px;
             margin-bottom: 20px;
-            font-weight: bold;
-            color: var(--moss);
+            font-size: 14px;
         }
 
-        .puzzle-slots {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            min-height: 50px;
-        }
+        .puzzle-word { font-size: 32px; margin-bottom: 30px; font-weight: bold; color: var(--moss); letter-spacing: 2px; }
 
+        .puzzle-slots { display: flex; gap: 15px; margin-bottom: 30px; }
         .slot {
-            width: 50px;
-            height: 50px;
-            border-bottom: 3px solid var(--wood);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            /* Font adjustments for specific scripts */
+            width: 60px; height: 60px;
+            border-bottom: 4px solid var(--wood);
+            background: rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px; cursor: pointer;
         }
-        
+
+        .puzzle-options { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; max-width: 90%; }
+        .option-tile {
+            background: var(--wood); color: var(--cream);
+            padding: 10px 20px; border-radius: 6px;
+            cursor: pointer; font-size: 28px;
+            border: 2px solid var(--gold);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+        .option-tile:active { transform: scale(0.9); }
+
+        /* Font Specifics */
         .script-jawa { font-family: 'Noto Sans Javanese', sans-serif; }
         .script-bali { font-family: 'Noto Sans Balinese', sans-serif; }
         .script-lontara { font-family: 'Noto Sans Buginese', sans-serif; }
 
-        .puzzle-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .option-tile {
-            background: var(--wood);
-            color: var(--cream);
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 20px;
-            border: 1px solid var(--gold);
-            box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
-        }
-
-        .option-tile:hover { transform: scale(1.1); }
-
-        /* Controls for Mobile */
-        .controls {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            height: 100px;
-            pointer-events: none;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
-
-        .control-group {
-            pointer-events: auto;
-            display: flex;
-            gap: 10px;
-        }
-
-        .touch-btn {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid var(--cream);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: var(--cream);
-            user-select: none;
-        }
-        
-        .touch-btn:active { background: rgba(255, 255, 255, 0.4); }
-
-        /* Pustaka Styles */
+        /* Pustaka Grid */
         .pustaka-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            width: 90%;
-            max-height: 60vh;
-            overflow-y: auto;
-            margin: 20px 0;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px; width: 90%; max-height: 50vh; overflow-y: auto; margin: 20px 0;
         }
         .pustaka-card {
-            background: var(--cream);
-            color: var(--bg-color);
-            padding: 10px;
-            border: 2px solid var(--wood);
-            font-family: sans-serif;
-            text-align: left;
+            background: #fff; color: #333; padding: 10px;
+            border: 2px solid var(--wood); border-radius: 4px;
         }
-        .pustaka-card h3 { margin: 0 0 5px 0; font-size: 14px; color: var(--moss); }
-        .pustaka-native { font-size: 20px; margin: 5px 0; text-align: center; }
 
-        @media (min-width: 800px) {
-            .controls { display: none; } /* Hide touch controls on PC */
+        /* Mobile Controls */
+        .controls {
+            position: absolute; bottom: 10px; width: 100%; height: 120px;
+            pointer-events: none; display: flex; justify-content: space-between; padding: 0 20px; box-sizing: border-box;
+            z-index: 80;
         }
+        .control-group { pointer-events: auto; display: flex; gap: 15px; align-items: flex-end; }
+        .touch-btn {
+            width: 70px; height: 70px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; color: white; user-select: none;
+            backdrop-filter: blur(2px);
+        }
+        .touch-btn:active { background: rgba(212, 175, 55, 0.5); transform: scale(0.95); }
+
+        @media (min-width: 800px) { .controls { display: none; } }
     </style>
 </head>
 <body>
@@ -250,48 +222,54 @@
 <div id="game-container">
     <canvas id="gameCanvas" width="800" height="450"></canvas>
 
-    <!-- UI Layer -->
+    <!-- UI Overlay -->
     <div class="ui-layer">
         <div class="hud">
-            <div class="hud-item">🔥 <span id="lives">3</span></div>
-            <div class="hud-item">LEVEL <span id="level-display">1</span></div>
+            <div>🔥 <span id="lives">3</span></div>
+            <div>LEVEL <span id="level-display">1</span></div>
         </div>
     </div>
 
-    <!-- Screens -->
-    <div id="start-screen">
+    <!-- Level Title Toast -->
+    <div id="level-title-overlay">AREA 1: JAWA</div>
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen">
         <h1>LABIRIN AKSARA</h1>
-        <h2>Menyusun Jejak, Menjaga Tradisi</h2>
-        <p>Bantu Arka membuka Gerbang Pustaka Budaya dengan menyusun kepingan aksara nusantara.</p>
-        <p style="color: #aaa; font-size: 10px;">Gunakan Panah / WASD untuk bergerak. Spasi untuk Lompat.</p>
+        <p style="color: var(--gold); margin-bottom: 20px;">Menyusun Jejak, Menjaga Tradisi</p>
+        <p>Gunakan Panah/WASD untuk bergerak.<br>Spasi/Tombol untuk Lompat.</p>
         <button class="btn" onclick="startGame()">Mulai Petualangan</button>
     </div>
 
+    <!-- Puzzle UI -->
     <div id="puzzle-interface">
-        <h2 style="color: #8b5a2b; margin-top:0;">GERBANG AKSARA</h2>
+        <div class="puzzle-header">SUSUN KATA</div>
         <div class="puzzle-word" id="puzzle-question">MAKAN</div>
         <div class="puzzle-slots" id="puzzle-slots"></div>
         <div class="puzzle-options" id="puzzle-options"></div>
-        <p style="font-size: 10px; color: #555;">Klik aksara untuk menyusun kata</p>
+        <p style="color: #666; font-size: 10px; margin-top:20px;">Klik aksara di bawah untuk mengisi kotak.</p>
     </div>
 
-    <div id="game-over-screen" class="hidden">
-        <h1 style="color: #ff5555;">OBOR PADAM</h1>
-        <p>Semangatmu belum luntur. Coba lagi!</p>
-        <button class="btn" onclick="resetGame()">Ulangi Level</button>
+    <!-- Game Over -->
+    <div id="game-over-screen" class="screen hidden">
+        <h1 style="color: var(--red-accent);">OBOR PADAM</h1>
+        <p>Jangan menyerah. Tradisi butuh penjaga sepertimu.</p>
+        <button class="btn" onclick="restartLevel()">Coba Lagi</button>
     </div>
 
-    <div id="victory-screen" class="hidden">
-        <h1>LEVEL SELESAI</h1>
-        <p>Satu warisan berhasil diselamatkan.</p>
-        <button class="btn" onclick="nextLevel()">Lanjut</button>
+    <!-- Victory Level -->
+    <div id="victory-screen" class="screen hidden">
+        <h1>LEVEL SELESAI!</h1>
+        <p>Gerbang terbuka. Pengetahuan baru didapatkan.</p>
+        <button class="btn" onclick="nextLevel()">Lanjut ke Daerah Berikutnya</button>
     </div>
 
-    <div id="pustaka-screen" class="hidden">
+    <!-- Final Pustaka -->
+    <div id="pustaka-screen" class="screen hidden">
         <h1>PUSTAKA BUDAYA</h1>
-        <p>"Warisan ini tidak punah selama kita masih mengejanya."</p>
+        <p>Semua kepingan telah terkumpul.</p>
         <div class="pustaka-grid" id="pustaka-content"></div>
-        <button class="btn" onclick="location.reload()">Kembali ke Awal</button>
+        <button class="btn" onclick="location.reload()">Kembali ke Menu Utama</button>
     </div>
 
     <!-- Mobile Controls -->
@@ -307,40 +285,31 @@
 </div>
 
 <script>
-    /**
-     * GAME ENGINE & LOGIC
-     */
+    /* ENGINE SETUP */
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     
-    // Game State
-    let gameState = 'START'; // START, PLAY, PUZZLE, GAMEOVER, VICTORY, PUSTAKA
+    // Core Game State
+    let gameState = 'MENU'; // MENU, PLAY, PUZZLE, GAMEOVER, VICTORY, TRANSITION
     let currentLevel = 1;
     let lives = 3;
+    let animationId; // Penting untuk kontrol loop
     let frameCount = 0;
-    
-    // Audio Context
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    const audioCtx = new AudioContext();
 
     // Inputs
-    const keys = {
-        right: false,
-        left: false,
-        up: false
-    };
-
-    // Constants
-    const GRAVITY = 0.5;
-    const JUMP_FORCE = -10;
-    const SPEED = 4;
+    const keys = { right: false, left: false, up: false };
     
-    // Level Data
+    // Physics Constants
+    const GRAVITY = 0.6;
+    const JUMP_FORCE = -11;
+    const SPEED = 4.5;
+
+    // Data Level
     const LEVELS = [
         {
-            id: 1,
-            name: "Jawa (Mataraman)",
-            bgColors: ['#8B4513', '#A0522D', '#CD853F'], // Red Brick colors
+            id: 1, name: "JAWA (Mataraman)",
+            sky: ['#FFD700', '#FF8C00'], // Sunset
+            groundColor: '#8B4513',
             scriptClass: 'script-jawa',
             puzzles: [
                 { id: "p1", ind: "NASI", native: ["ꦱꦼ", "ꦒ"], readable: "Sega" },
@@ -348,9 +317,9 @@
             ]
         },
         {
-            id: 2,
-            name: "Bali (Dewata)",
-            bgColors: ['#20B2AA', '#48D1CC', '#F0E68C'], // Beach/Frangipani
+            id: 2, name: "BALI (Dewata)",
+            sky: ['#87CEEB', '#E0F7FA'], // Blue Sky
+            groundColor: '#F4A460', // Sand color
             scriptClass: 'script-bali',
             puzzles: [
                 { id: "p3", ind: "AIR", native: ["ᬢᬶ", "ᬃ", "ᬢ"], readable: "Tirta" },
@@ -358,9 +327,9 @@
             ]
         },
         {
-            id: 3,
-            name: "Sulsel (Anging Mammiri)",
-            bgColors: ['#708090', '#778899', '#B0C4DE'], // Karst/Sea
+            id: 3, name: "SULSEL (Phinisi)",
+            sky: ['#2F4F4F', '#708090'], // Misty/Cloudy
+            groundColor: '#556B2F', // Karst Moss
             scriptClass: 'script-lontara',
             puzzles: [
                 { id: "p5", ind: "GUNUNG", native: ["ᨅᨘ", "ᨒᨘ"], readable: "Bulu" },
@@ -369,222 +338,172 @@
         }
     ];
 
-    let collectedWords = []; // For Pustaka
+    let collectedWords = []; 
 
-    // Game Objects
-    let player = {
-        x: 50,
-        y: 200,
-        w: 30,
-        h: 40,
-        vx: 0,
-        vy: 0,
-        grounded: false,
-        facingRight: true,
-        animFrame: 0
-    };
-
+    // Entities
+    let player = { x: 50, y: 200, w: 25, h: 40, vx: 0, vy: 0, grounded: false, facingRight: true };
+    let cameraX = 0;
     let platforms = [];
     let gates = [];
-    let decor = [];
-    let particles = [];
     let activePuzzle = null;
     let puzzleInput = [];
-    let cameraX = 0;
+    let decor = [];
 
-    /**
-     * INITIALIZATION
-     */
-    function initLevel(levelIdx) {
-        // Reset Physics
-        player.x = 50;
-        player.y = 200;
-        player.vx = 0;
-        player.vy = 0;
-        cameraX = 0;
-        
-        platforms = [];
-        gates = [];
-        decor = [];
-        
-        const lvlData = LEVELS[levelIdx - 1];
-        
-        // Build World Procedurally
-        let xCursor = 0;
-        
-        // Ground
-        for(let i=0; i<30; i++) {
-            // Gaps
-            if (i !== 5 && i !== 12 && i !== 20) {
-                platforms.push({x: xCursor, y: 350, w: 100, h: 100, type: 'ground'});
-            }
-            
-            // Higher platforms
-            if (i === 4 || i === 11 || i === 19) {
-                platforms.push({x: xCursor + 50, y: 250, w: 80, h: 20, type: 'plat'});
-            }
-
-            // Decor
-            if (Math.random() > 0.7) {
-                decor.push({x: xCursor + 20, y: 350, type: (levelIdx===1 ? 'tree' : levelIdx===2 ? 'shrine' : 'rock')});
-            }
-
-            xCursor += 100;
-        }
-
-        // Add Gates (Puzzle triggers)
-        gates.push({x: 600, y: 250, w: 40, h: 100, puzzle: lvlData.puzzles[0], solved: false});
-        gates.push({x: 1800, y: 250, w: 40, h: 100, puzzle: lvlData.puzzles[1], solved: false});
-        
-        // Finish Line
-        gates.push({x: 2800, y: 250, w: 40, h: 100, type: 'finish', solved: false});
-
-        document.getElementById('level-display').innerText = currentLevel;
-    }
+    /* --- INITIALIZATION & LEVEL GEN --- */
 
     function startGame() {
         document.getElementById('start-screen').classList.add('hidden');
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        playMusic();
         lives = 3;
         currentLevel = 1;
         updateHud();
         initLevel(currentLevel);
+    }
+
+    function initLevel(levelIdx) {
+        // Reset Physics
+        player.x = 50; 
+        player.y = 200; 
+        player.vx = 0; 
+        player.vy = 0;
+        cameraX = 0;
+        player.grounded = false;
+
+        // Clean arrays
+        platforms = [];
+        gates = [];
+        decor = [];
+
+        const lvlData = LEVELS[levelIdx - 1];
+
+        // Generate Terrain (Procedural sederhana)
+        let cx = 0;
+        const groundY = 350;
+
+        // Buat lantai yang panjang dengan beberapa lubang
+        for(let i=0; i<35; i++) {
+            // Lubang pada indeks tertentu
+            let isGap = (i === 6 || i === 14 || i === 22);
+            
+            if(!isGap) {
+                platforms.push({ x: cx, y: groundY, w: 100, h: 100, type: 'ground' });
+                
+                // Dekorasi Random (Pohon/Batu)
+                if(Math.random() > 0.7) {
+                    decor.push({x: cx + 20, y: groundY, type: (Math.random() > 0.5 ? 'tree' : 'rock')});
+                }
+            } else {
+                // Platform melayang di atas lubang
+                platforms.push({ x: cx + 10, y: groundY - 60 - (Math.random()*40), w: 80, h: 20, type: 'plat' });
+            }
+            
+            // Platform tinggi tambahan
+            if(i % 5 === 0 && i > 0) {
+                platforms.push({ x: cx, y: groundY - 100, w: 80, h: 20, type: 'plat' });
+            }
+
+            cx += 100;
+        }
+
+        // Penempatan Gerbang (Puzzle)
+        // Gerbang 1
+        gates.push({ x: 700, y: groundY - 100, w: 40, h: 100, type: 'puzzle', puzzle: lvlData.puzzles[0], solved: false });
+        // Gerbang 2
+        gates.push({ x: 1900, y: groundY - 100, w: 40, h: 100, type: 'puzzle', puzzle: lvlData.puzzles[1], solved: false });
+        // Finish
+        gates.push({ x: 3000, y: groundY - 100, w: 50, h: 100, type: 'finish', solved: false });
+
+        // Update UI Text
+        document.getElementById('level-display').innerText = currentLevel;
+        showLevelTitle(lvlData.name);
+
+        // Start Loop
         gameState = 'PLAY';
+        if(animationId) cancelAnimationFrame(animationId);
         loop();
     }
 
-    function resetGame() {
-        document.getElementById('game-over-screen').classList.add('hidden');
-        lives = 3;
-        updateHud();
-        initLevel(currentLevel);
-        gameState = 'PLAY';
+    function showLevelTitle(text) {
+        const el = document.getElementById('level-title-overlay');
+        el.innerText = `AREA ${currentLevel}: ${text}`;
+        el.style.opacity = 1;
+        setTimeout(() => { el.style.opacity = 0; }, 2000);
     }
 
-    function nextLevel() {
-        document.getElementById('victory-screen').classList.add('hidden');
-        currentLevel++;
-        if (currentLevel > 3) {
-            showPustaka();
-        } else {
-            initLevel(currentLevel);
-            gameState = 'PLAY';
-        }
-    }
+    /* --- GAME LOOP & LOGIC --- */
 
-    /**
-     * INPUT HANDLING
-     */
-    window.addEventListener('keydown', (e) => {
-        if(gameState !== 'PLAY') return;
-        if(e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
-        if(e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
-        if(e.code === 'ArrowUp' || e.code === 'Space') {
-            if(player.grounded) {
-                player.vy = JUMP_FORCE;
-                player.grounded = false;
-                playSound('jump');
-            }
-        }
-    });
-
-    window.addEventListener('keyup', (e) => {
-        if(e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
-        if(e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
-    });
-
-    // Mobile Touch
-    const setupTouch = (id, key) => {
-        const el = document.getElementById(id);
-        el.addEventListener('touchstart', (e) => { 
-            e.preventDefault(); 
-            if(key === 'up' && player.grounded && gameState === 'PLAY') {
-                player.vy = JUMP_FORCE; 
-                player.grounded = false; 
-                playSound('jump');
-            } else {
-                keys[key] = true; 
-            }
-        });
-        el.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
-    };
-    setupTouch('btn-left', 'left');
-    setupTouch('btn-right', 'right');
-    setupTouch('btn-jump', 'up');
-
-    /**
-     * GAME LOOP
-     */
     function loop() {
-        if (gameState === 'PLAY') {
+        if(gameState === 'PLAY' || gameState === 'TRANSITION') {
             update();
             draw();
-            requestAnimationFrame(loop);
+            animationId = requestAnimationFrame(loop);
         }
     }
 
     function update() {
-        // Horizontal Movement
+        if(gameState !== 'PLAY') return;
+
+        // Input Movement
         if (keys.right) { player.vx = SPEED; player.facingRight = true; }
         else if (keys.left) { player.vx = -SPEED; player.facingRight = false; }
         else { player.vx = 0; }
 
-        // Physics
+        // Jump
+        if (keys.up && player.grounded) {
+            player.vy = JUMP_FORCE;
+            player.grounded = false;
+        }
+
+        // Gravity & Velocity
         player.vy += GRAVITY;
         player.x += player.vx;
         player.y += player.vy;
-        
-        // Ground Collision
+
+        // Collision Detection
         player.grounded = false;
-        
-        // Platform Collision
-        for (let p of platforms) {
+        platforms.forEach(p => {
             if (rectIntersect(player.x, player.y, player.w, player.h, p.x, p.y, p.w, p.h)) {
-                // Determine side of collision
-                let overlapX = (player.w + p.w)/2 - Math.abs((player.x + player.w/2) - (p.x + p.w/2));
-                let overlapY = (player.h + p.h)/2 - Math.abs((player.y + player.h/2) - (p.y + p.h/2));
+                // Deteksi sisi tabrakan sederhana
+                const overlapX = (player.w + p.w)/2 - Math.abs((player.x + player.w/2) - (p.x + p.w/2));
+                const overlapY = (player.h + p.h)/2 - Math.abs((player.y + player.h/2) - (p.y + p.h/2));
 
                 if (overlapX < overlapY) {
-                    // Horizontal collision (wall)
+                    // Nabrak samping
                     player.x -= (player.vx > 0 ? overlapX : -overlapX);
                     player.vx = 0;
                 } else {
-                    // Vertical collision
-                    if (player.vy > 0) { // Landing
+                    // Nabrak atas/bawah
+                    if (player.vy > 0) { // Jatuh ke lantai
                         player.y -= overlapY;
                         player.vy = 0;
                         player.grounded = true;
-                    } else { // Hitting head
+                    } else { // Jedot kepala
                         player.y += overlapY;
                         player.vy = 0;
                     }
                 }
             }
-        }
+        });
 
-        // Death pit
-        if (player.y > canvas.height) {
+        // Jatuh ke jurang
+        if(player.y > canvas.height + 50) {
             hurtPlayer();
         }
 
-        // Gate Interaction
-        for (let g of gates) {
+        // Interaksi Gerbang
+        gates.forEach(g => {
             if (!g.solved && rectIntersect(player.x, player.y, player.w, player.h, g.x, g.y, g.w, g.h)) {
                 if(g.type === 'finish') {
-                    playSound('win');
-                    gameState = 'VICTORY';
-                    document.getElementById('victory-screen').classList.remove('hidden');
+                    levelComplete();
                 } else {
-                    startPuzzle(g);
+                    triggerPuzzle(g);
                 }
             }
-        }
+        });
 
         // Camera Follow
-        let targetCamX = player.x - canvas.width / 3;
+        const targetCamX = player.x - 200;
         cameraX += (targetCamX - cameraX) * 0.1;
-        if (cameraX < 0) cameraX = 0;
+        if(cameraX < 0) cameraX = 0;
 
         frameCount++;
     }
@@ -596,16 +515,40 @@
     function hurtPlayer() {
         lives--;
         updateHud();
-        playSound('wrong');
-        if (lives <= 0) {
+        // Respawn sedikit ke belakang
+        player.x = Math.max(50, player.x - 150);
+        player.y = 200;
+        player.vy = 0;
+        
+        if(lives <= 0) {
             gameState = 'GAMEOVER';
             document.getElementById('game-over-screen').classList.remove('hidden');
+        }
+    }
+
+    function restartLevel() {
+        document.getElementById('game-over-screen').classList.add('hidden');
+        lives = 3;
+        updateHud();
+        initLevel(currentLevel);
+    }
+
+    function levelComplete() {
+        gameState = 'VICTORY';
+        document.getElementById('victory-screen').classList.remove('hidden');
+    }
+
+    // FIX: Fungsi ini diperbaiki untuk memastikan loop restart
+    function nextLevel() {
+        document.getElementById('victory-screen').classList.add('hidden');
+        currentLevel++;
+        
+        if (currentLevel > 3) {
+            showPustaka();
         } else {
-            // Respawn back a bit
-            player.x -= 100;
-            player.y = 200;
-            player.vy = 0;
-            if (player.x < 0) player.x = 50;
+            // Pastikan state diubah sebelum init
+            gameState = 'TRANSITION'; 
+            initLevel(currentLevel); // initLevel akan memanggil loop() di akhirnya
         }
     }
 
@@ -613,364 +556,268 @@
         document.getElementById('lives').innerText = lives;
     }
 
-    /**
-     * DRAWING
-     */
-    function draw() {
-        // Clear
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Background (Parallax)
-        const lvlColors = LEVELS[currentLevel-1].bgColors;
-        
-        // Sky
-        let grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        grd.addColorStop(0, "#87CEEB");
-        grd.addColorStop(1, "#E0F7FA");
-        if(currentLevel === 1) { grd = ctx.createLinearGradient(0, 0, 0, canvas.height); grd.addColorStop(0, "#FFD700"); grd.addColorStop(1, "#FF8C00"); } // Sunset
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    /* --- PUZZLE SYSTEM --- */
 
-        // Mountains (Far)
-        ctx.fillStyle = lvlColors[2];
-        for(let i=0; i<10; i++) {
-            ctx.beginPath();
-            ctx.moveTo((i*200) - (cameraX*0.2), canvas.height);
-            ctx.lineTo((i*200) + 100 - (cameraX*0.2), canvas.height - 150);
-            ctx.lineTo((i*200) + 200 - (cameraX*0.2), canvas.height);
-            ctx.fill();
-        }
-
-        ctx.save();
-        ctx.translate(-cameraX, 0);
-
-        // Decor (Trees/Shrines)
-        decor.forEach(d => {
-            if(d.type === 'tree') drawTree(d.x, d.y);
-            else if(d.type === 'shrine') drawShrine(d.x, d.y);
-            else drawRock(d.x, d.y);
-        });
-
-        // Platforms
-        platforms.forEach(p => {
-            ctx.fillStyle = lvlColors[0];
-            ctx.fillRect(p.x, p.y, p.w, p.h);
-            // Detail
-            ctx.fillStyle = lvlColors[1];
-            ctx.fillRect(p.x, p.y, p.w, 10); // grass/top
-        });
-
-        // Gates
-        gates.forEach(g => {
-            if(g.solved) return;
-            if(g.type === 'finish') {
-                ctx.fillStyle = "gold";
-                ctx.fillRect(g.x, g.y, g.w, g.h);
-                // Flag
-                ctx.fillStyle = "red";
-                ctx.fillRect(g.x + 10, g.y - 40, 40, 30);
-                ctx.fillStyle = "white";
-                ctx.fillRect(g.x + 10, g.y - 40, 20, 30);
-            } else {
-                ctx.fillStyle = "#333";
-                ctx.fillRect(g.x, g.y, g.w, g.h);
-                // Symbol
-                ctx.fillStyle = "#fff";
-                ctx.font = "20px Arial";
-                ctx.fillText("?", g.x + 10, g.y + 50);
-            }
-        });
-
-        // Player (Arka)
-        drawPlayer(player.x, player.y, player.w, player.h, player.facingRight);
-
-        ctx.restore();
-    }
-
-    function drawPlayer(x, y, w, h, facingRight) {
-        ctx.save();
-        
-        // Simple pixel art construction
-        // Body
-        ctx.fillStyle = "#d4af37"; // Tunic
-        ctx.fillRect(x, y + 10, w, h - 20);
-        
-        // Head
-        ctx.fillStyle = "#f4c2c2"; // Skin
-        ctx.fillRect(x + 5, y, 20, 15);
-        
-        // Blangkon/Headgear
-        ctx.fillStyle = "#8b4513";
-        ctx.fillRect(x + 4, y - 2, 22, 6);
-
-        // Sash (Batik)
-        ctx.fillStyle = "#4a5d23";
-        ctx.fillRect(x, y + 25, w, 8);
-
-        // Bag (Scrolls)
-        ctx.fillStyle = "#654321";
-        ctx.fillRect(x + (facingRight ? -5 : 25), y + 15, 10, 15);
-
-        // Eyes
-        ctx.fillStyle = "#000";
-        if (facingRight) {
-            ctx.fillRect(x + 18, y + 5, 2, 2);
-        } else {
-            ctx.fillRect(x + 10, y + 5, 2, 2);
-        }
-
-        // Animation Bob
-        if (Math.abs(player.vx) > 0) {
-            if (Math.floor(frameCount / 5) % 2 === 0) {
-                ctx.clearRect(x, y + h - 5, w, 5); // Lift legs
-            }
-        }
-
-        ctx.restore();
-    }
-
-    function drawTree(x, y) {
-        ctx.fillStyle = "#8b4513";
-        ctx.fillRect(x+10, y-60, 20, 60); // Trunk
-        ctx.fillStyle = "#228b22";
-        ctx.beginPath();
-        ctx.arc(x+20, y-70, 30, 0, Math.PI*2); // Leaves
-        ctx.fill();
-    }
-
-    function drawShrine(x, y) {
-        ctx.fillStyle = "#333";
-        ctx.fillRect(x, y-80, 40, 80);
-        ctx.fillStyle = "#d4af37"; // Roof tiers
-        ctx.fillRect(x-10, y-30, 60, 10);
-        ctx.fillRect(x-5, y-50, 50, 10);
-        ctx.fillRect(x, y-70, 40, 10);
-    }
-    
-    function drawRock(x, y) {
-        ctx.fillStyle = "#708090";
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(x+20, y-40);
-        ctx.lineTo(x+50, y);
-        ctx.fill();
-    }
-
-    /**
-     * PUZZLE SYSTEM
-     */
-    function startPuzzle(gateObj) {
+    function triggerPuzzle(gate) {
         gameState = 'PUZZLE';
-        player.vx = 0; // stop player
-        activePuzzle = gateObj;
+        activePuzzle = gate;
         
-        const pData = gateObj.puzzle;
         const ui = document.getElementById('puzzle-interface');
-        const slotsDiv = document.getElementById('puzzle-slots');
-        const optionsDiv = document.getElementById('puzzle-options');
-        
         ui.style.display = 'flex';
-        document.getElementById('puzzle-question').innerText = pData.ind;
         
-        // Prepare Slots
-        puzzleInput = [];
+        document.getElementById('puzzle-question').innerText = gate.puzzle.ind;
+        
+        const slotsDiv = document.getElementById('puzzle-slots');
         slotsDiv.innerHTML = '';
-        for(let i=0; i<pData.native.length; i++) {
-            let s = document.createElement('div');
+        puzzleInput = [];
+
+        // Buat Slot Kosong
+        gate.puzzle.native.forEach((char, i) => {
+            const s = document.createElement('div');
             s.className = `slot ${LEVELS[currentLevel-1].scriptClass}`;
             s.id = `slot-${i}`;
+            s.onclick = () => clearSlot(i);
             slotsDiv.appendChild(s);
             puzzleInput.push(null);
-        }
+        });
 
-        // Prepare Shuffled Options
-        optionsDiv.innerHTML = '';
-        let options = [...pData.native];
-        // Add decoys (random chars based on level)
-        if(currentLevel === 1) options.push("ꦏ", "ꦫ"); 
-        if(currentLevel === 2) options.push("ᬦ", "ᬫ"); 
-        if(currentLevel === 3) options.push("ᨆ", "ᨈ"); 
+        // Buat Pilihan Aksara (Termasuk Pengalih)
+        const optsDiv = document.getElementById('puzzle-options');
+        optsDiv.innerHTML = '';
+        let options = [...gate.puzzle.native];
         
+        // Tambah aksara acak sebagai pengalih
+        const decoys = ["ꦏ","ꦫ","ᬦ","ᬫ","ᨆ","ᨈ"]; 
+        options.push(decoys[Math.floor(Math.random()*decoys.length)]);
+        options.push(decoys[Math.floor(Math.random()*decoys.length)]);
         options.sort(() => Math.random() - 0.5);
 
         options.forEach(char => {
-            let btn = document.createElement('div');
+            const btn = document.createElement('div');
             btn.className = `option-tile ${LEVELS[currentLevel-1].scriptClass}`;
             btn.innerText = char;
             btn.onclick = () => fillSlot(char);
-            optionsDiv.appendChild(btn);
+            optsDiv.appendChild(btn);
         });
     }
 
     function fillSlot(char) {
-        // Find first empty slot
-        const emptyIdx = puzzleInput.findIndex(val => val === null);
-        if (emptyIdx !== -1) {
-            puzzleInput[emptyIdx] = char;
-            document.getElementById(`slot-${emptyIdx}`).innerText = char;
-            playSound('collect');
-
-            // Check if full
-            if (!puzzleInput.includes(null)) {
-                checkPuzzle();
+        const idx = puzzleInput.findIndex(v => v === null);
+        if(idx !== -1) {
+            puzzleInput[idx] = char;
+            document.getElementById(`slot-${idx}`).innerText = char;
+            
+            // Cek jika penuh
+            if(!puzzleInput.includes(null)) {
+                setTimeout(checkSolution, 300);
             }
         }
     }
 
-    function checkPuzzle() {
-        const correct = activePuzzle.puzzle.native;
-        const isCorrect = puzzleInput.every((val, index) => val === correct[index]);
-
-        setTimeout(() => {
-            if (isCorrect) {
-                playSound('gate_open');
-                activePuzzle.solved = true;
-                activePuzzle = null;
-                
-                // Add to collection if unique
-                if(!collectedWords.find(w => w.id === LEVELS[currentLevel-1].puzzles[0].id)) {
-                    collectedWords.push({
-                        ...LEVELS[currentLevel-1].puzzles.find(p => p.ind === document.getElementById('puzzle-question').innerText),
-                        scriptClass: LEVELS[currentLevel-1].scriptClass
-                    });
-                }
-                
-                document.getElementById('puzzle-interface').style.display = 'none';
-                gameState = 'PLAY';
-                loop(); // resume loop
-            } else {
-                playSound('wrong');
-                // Reset slots
-                puzzleInput.fill(null);
-                document.querySelectorAll('.slot').forEach(s => s.innerText = '');
-                hurtPlayer();
-                if(gameState === 'GAMEOVER') {
-                   document.getElementById('puzzle-interface').style.display = 'none'; 
-                }
-            }
-        }, 500);
+    function clearSlot(idx) {
+        puzzleInput[idx] = null;
+        document.getElementById(`slot-${idx}`).innerText = '';
     }
 
-    /**
-     * PUSTAKA (LIBRARY)
-     */
+    function checkSolution() {
+        const correct = activePuzzle.puzzle.native;
+        const isCorrect = puzzleInput.every((v, i) => v === correct[i]);
+
+        if(isCorrect) {
+            // Benar
+            activePuzzle.solved = true;
+            
+            // Simpan ke Pustaka
+            if(!collectedWords.find(w => w.id === activePuzzle.puzzle.id)) {
+                collectedWords.push({
+                    ...activePuzzle.puzzle,
+                    area: LEVELS[currentLevel-1].name,
+                    cls: LEVELS[currentLevel-1].scriptClass
+                });
+            }
+
+            document.getElementById('puzzle-interface').style.display = 'none';
+            activePuzzle = null;
+            gameState = 'PLAY';
+            loop(); // Lanjutkan loop utama
+        } else {
+            // Salah
+            hurtPlayer();
+            // Reset puzzle visual
+            puzzleInput.fill(null);
+            document.querySelectorAll('.slot').forEach(el => el.innerText = '');
+            if(gameState === 'GAMEOVER') {
+                document.getElementById('puzzle-interface').style.display = 'none';
+            }
+        }
+    }
+
+    /* --- PUSTAKA & DRAWING --- */
+
     function showPustaka() {
         gameState = 'PUSTAKA';
-        document.getElementById('pustaka-screen').classList.remove('hidden');
-        const content = document.getElementById('pustaka-content');
-        content.innerHTML = '';
+        const screen = document.getElementById('pustaka-screen');
+        screen.classList.remove('hidden');
+        const grid = document.getElementById('pustaka-content');
+        grid.innerHTML = '';
+        
+        if(collectedWords.length === 0) {
+            grid.innerHTML = '<p>Belum ada aksara yang terkumpul.</p>';
+            return;
+        }
 
-        // Flatten all puzzles from levels to show full dictionary if needed, 
-        // or just show what was collected. Here we show all for the "Full Pustaka" effect.
-        const allPuzzles = [
-            ...LEVELS[0].puzzles.map(p => ({...p, cls: 'script-jawa', area: 'Jawa'})),
-            ...LEVELS[1].puzzles.map(p => ({...p, cls: 'script-bali', area: 'Bali'})),
-            ...LEVELS[2].puzzles.map(p => ({...p, cls: 'script-lontara', area: 'Sulsel'}))
-        ];
-
-        allPuzzles.forEach(item => {
+        collectedWords.forEach(w => {
             const card = document.createElement('div');
             card.className = 'pustaka-card';
             card.innerHTML = `
-                <h3>${item.area}: ${item.ind}</h3>
-                <div class="pustaka-native ${item.cls}">${item.native.join('')}</div>
-                <div style="font-size:12px; font-style:italic;">"${item.readable}"</div>
+                <div style="font-size:10px; color:#888;">${w.area}</div>
+                <div style="font-weight:bold; color:var(--moss);">${w.ind}</div>
+                <div class="${w.cls}" style="font-size:24px; margin:5px 0;">${w.native.join('')}</div>
+                <div style="font-style:italic; font-size:12px;">"${w.readable}"</div>
             `;
-            content.appendChild(card);
+            grid.appendChild(card);
         });
     }
 
-    /**
-     * AUDIO (Web Audio API Synthesis)
-     */
-    function playSound(type) {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        osc.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
+    function draw() {
+        const lvl = LEVELS[currentLevel-1];
+        
+        // 1. Sky Gradient
+        const grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        grd.addColorStop(0, lvl.sky[0]);
+        grd.addColorStop(1, lvl.sky[1]);
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        const now = audioCtx.currentTime;
-
-        if (type === 'jump') {
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(150, now);
-            osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
-            gainNode.gain.setValueAtTime(0.1, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-            osc.start(now);
-            osc.stop(now + 0.1);
-        } else if (type === 'collect') {
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, now);
-            gainNode.gain.setValueAtTime(0.1, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-            osc.start(now);
-            osc.stop(now + 0.1);
-        } else if (type === 'gate_open') {
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(200, now);
-            osc.frequency.linearRampToValueAtTime(600, now + 0.5);
-            gainNode.gain.setValueAtTime(0.1, now);
-            gainNode.gain.linearRampToValueAtTime(0, now + 0.5);
-            osc.start(now);
-            osc.stop(now + 0.5);
-        } else if (type === 'wrong') {
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(100, now);
-            osc.frequency.linearRampToValueAtTime(50, now + 0.3);
-            gainNode.gain.setValueAtTime(0.1, now);
-            gainNode.gain.linearRampToValueAtTime(0, now + 0.3);
-            osc.start(now);
-            osc.stop(now + 0.3);
-        } else if (type === 'win') {
-            // Arpeggio
-            [440, 554, 659, 880].forEach((freq, i) => {
-                const o = audioCtx.createOscillator();
-                const g = audioCtx.createGain();
-                o.connect(g);
-                g.connect(audioCtx.destination);
-                o.frequency.value = freq;
-                g.gain.setValueAtTime(0.05, now + i*0.1);
-                g.gain.exponentialRampToValueAtTime(0.001, now + i*0.1 + 0.5);
-                o.start(now + i*0.1);
-                o.stop(now + i*0.1 + 0.5);
-            });
+        // 2. Parallax Mountains
+        ctx.save();
+        ctx.translate(-cameraX * 0.2, 0); // Slow parallax
+        ctx.fillStyle = "rgba(0,0,0,0.1)";
+        for(let i=0; i<5; i++) {
+            ctx.beginPath();
+            ctx.moveTo(i*400, canvas.height);
+            ctx.lineTo(i*400 + 200, canvas.height - 250);
+            ctx.lineTo(i*400 + 400, canvas.height);
+            ctx.fill();
         }
-    }
+        ctx.restore();
 
-    // Pseudo-Gamelan Loop
-    let musicInterval;
-    function playMusic() {
-        if(musicInterval) clearInterval(musicInterval);
-        
-        // Pelog-ish scale frequencies
-        const scale = [261.63, 293.66, 329.63, 392.00, 440.00]; 
-        
-        musicInterval = setInterval(() => {
-            if(gameState !== 'PLAY') return;
-            if(Math.random() > 0.7) {
-                const note = scale[Math.floor(Math.random() * scale.length)];
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                osc.type = 'sine'; // Soft like metallophone
-                osc.frequency.setValueAtTime(note, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
-                
-                osc.start();
-                osc.stop(audioCtx.currentTime + 1.5);
+        ctx.save();
+        ctx.translate(-cameraX, 0);
+
+        // 3. Decor
+        decor.forEach(d => {
+            if(d.type === 'tree') drawTree(d.x, d.y);
+            else drawRock(d.x, d.y);
+        });
+
+        // 4. Platforms
+        ctx.fillStyle = lvl.groundColor;
+        platforms.forEach(p => {
+            ctx.fillRect(p.x, p.y, p.w, p.h);
+            // Grass topper
+            ctx.fillStyle = "rgba(0,0,0,0.2)";
+            ctx.fillRect(p.x, p.y, p.w, 5);
+            ctx.fillStyle = lvl.groundColor; // reset
+        });
+
+        // 5. Gates
+        gates.forEach(g => {
+            if(g.solved) return; // Hide if solved
+            
+            if(g.type === 'finish') {
+                ctx.fillStyle = '#FFD700'; // Gold finish
+                ctx.fillRect(g.x, g.y, g.w, g.h);
+                // Flag
+                ctx.fillStyle = 'red'; ctx.fillRect(g.x+10, g.y-40, 30, 20);
+                ctx.fillStyle = 'white'; ctx.fillRect(g.x+10, g.y-40, 15, 20);
+                ctx.fillStyle = 'brown'; ctx.fillRect(g.x, g.y-40, 5, 140);
+            } else {
+                // Puzzle Gate
+                ctx.fillStyle = '#444';
+                ctx.fillRect(g.x, g.y, g.w, g.h);
+                ctx.fillStyle = '#FFF';
+                ctx.font = '20px Arial';
+                ctx.fillText("?", g.x + 10, g.y + 50);
             }
-        }, 500); // playing notes randomly every 500ms
+        });
+
+        // 6. Player
+        drawPlayer();
+
+        ctx.restore();
     }
 
-    // Initial Draw
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0,0, canvas.width, canvas.height);
+    function drawPlayer() {
+        const x = player.x; 
+        const y = player.y;
+        
+        // Simple Pixel Art
+        // Tunic
+        ctx.fillStyle = '#d4af37'; 
+        ctx.fillRect(x, y + 10, player.w, player.h - 10);
+        // Head
+        ctx.fillStyle = '#f4c2c2'; 
+        ctx.fillRect(x + 2, y, player.w - 4, 15);
+        // Blangkon
+        ctx.fillStyle = '#654321';
+        ctx.fillRect(x, y - 4, player.w, 8);
+        
+        // Eye
+        ctx.fillStyle = 'black';
+        if(player.facingRight) ctx.fillRect(x + 16, y + 5, 3, 3);
+        else ctx.fillRect(x + 6, y + 5, 3, 3);
 
+        // Bag
+        ctx.fillStyle = '#8B4513';
+        ctx.fillRect(x + (player.facingRight ? 0 : 15), y + 15, 10, 15);
+    }
+
+    function drawTree(x, y) {
+        ctx.fillStyle = "#8B4513"; ctx.fillRect(x+10, y-60, 10, 60);
+        ctx.fillStyle = "#228B22"; 
+        ctx.beginPath(); ctx.arc(x+15, y-70, 25, 0, Math.PI*2); ctx.fill();
+    }
+    function drawRock(x, y) {
+        ctx.fillStyle = "#808080";
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x+15, y-25); ctx.lineTo(x+30, y); ctx.fill();
+    }
+
+    /* --- INPUT HANDLING --- */
+    window.addEventListener('keydown', e => {
+        if(gameState !== 'PLAY') return;
+        if(e.code==='ArrowRight'||e.code==='KeyD') keys.right=true;
+        if(e.code==='ArrowLeft'||e.code==='KeyA') keys.left=true;
+        if(e.code==='ArrowUp'||e.code==='Space'||e.code==='KeyW') {
+             keys.up=true; 
+             // Langsung lompat biar responsif
+             if(player.grounded) { player.vy = JUMP_FORCE; player.grounded=false; }
+        }
+    });
+    window.addEventListener('keyup', e => {
+        if(e.code==='ArrowRight'||e.code==='KeyD') keys.right=false;
+        if(e.code==='ArrowLeft'||e.code==='KeyA') keys.left=false;
+        if(e.code==='ArrowUp'||e.code==='Space'||e.code==='KeyW') keys.up=false;
+    });
+
+    // Touch Handling (Simple)
+    const bindTouch = (id, key) => {
+        const el = document.getElementById(id);
+        el.addEventListener('touchstart', (e) => { 
+            e.preventDefault(); 
+            if(key === 'up' && player.grounded && gameState==='PLAY') {
+                player.vy = JUMP_FORCE; player.grounded=false;
+            }
+            keys[key] = true; 
+        });
+        el.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
+    };
+    bindTouch('btn-left', 'left');
+    bindTouch('btn-right', 'right');
+    bindTouch('btn-jump', 'up');
+
+    // Init first render
+    ctx.fillStyle='#000'; ctx.fillRect(0,0,800,450);
 </script>
 </body>
 </html>
