@@ -843,14 +843,14 @@
   <footer>
     <div class="container">
       <h3 style="font-family: 'Playfair Display'; margin-bottom: 20px;">Zahra Yulia</h3>
-      <p class="text-muted mb-4">Made with 💖, Coffee, and Code.</p>
+      <p class="text-muted mb-3; color: var(--text-light)">Made with 💖, Coffee, and Code.</p>
       <div>
         <a href="https://instagram.com/zyulear" class="mx-3"><i class="fab fa-instagram fa-lg"></i></a>
         <a href="mailto:zyulear27@gmail.com" class="mx-3"><i class="far fa-envelope fa-lg"></i></a>
         <a href="#" class="mx-3"><i class="fab fa-linkedin fa-lg"></i></a>
         <a href="#" class="mx-3"><i class="fab fa-github fa-lg"></i></a>
       </div>
-      <p class="small text-muted mt-4">© 2025 ZYR - All Rights Reserved</p>
+      <p class="small text-muted mt-3; color: var(--text-light)">© 2025 ZYR - All Rights Reserved</p>
     </div>
   </footer>
 
@@ -913,73 +913,8 @@
         }
       });
     });
-
-    // 3. AI Assistant Logic
-    const aiButton = document.getElementById('ai-button');
-    const aiContainer = document.getElementById('ai-chat-container');
-    const aiClose = document.getElementById('ai-close');
-    const aiInput = document.getElementById('ai-user-input');
-    const aiSend = document.getElementById('ai-send');
-    const aiMessages = document.getElementById('ai-chat-messages');
-
-    // Toggle Chat
-    aiButton.addEventListener('click', () => {
-      aiContainer.classList.toggle('active');
-      aiButton.style.display = aiContainer.classList.contains('active') ? 'none' : 'block';
-    });
-
-    aiClose.addEventListener('click', () => {
-      aiContainer.classList.remove('active');
-      aiButton.style.display = 'block';
-    });
-
-    // Send Message Logic
-    function addMessage(text, sender) {
-      const div = document.createElement('div');
-      div.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
-      div.textContent = text;
-      aiMessages.appendChild(div);
-      aiMessages.scrollTop = aiMessages.scrollHeight;
-    }
-
-    function handleAiResponse(userText) {
-      // Simple logic simulation - improvisasi lucu
-      let response = "";
-      const text = userText.toLowerCase();
-
-      if (text.includes('halo') || text.includes('hi')) {
-        response = "Hai! Selamat datang di dunia Zahra. Mau lihat project atau main game?";
-      } else if (text.includes('siapa kamu')) {
-        response = "Aku asisten virtual Zahra yang paling imut! 🤖✨";
-      } else if (text.includes('project') || text.includes('karya')) {
-        response = "Zahra punya banyak project keren! Coba scroll ke bagian 'Projects' di atas ya.";
-      } else if (text.includes('game')) {
-        response = "Suka main game? Zahra bikin game labirin aksara lho, seru banget!";
-      } else if (text.includes('pacar') || text.includes('jomblo')) {
-        response = "Waduh, pertanyaan sensitif nih! Rahasia dong 😜";
-      } else if (text.includes('kontak') || text.includes('email')) {
-        response = "Bisa kirim email ke zyulear27@gmail.com ya!";
-      } else {
-        response = "Hmm, aku belum diajarin jawab itu. Tapi Zahra pasti tahu! Coba kontak dia langsung via form di bawah.";
-      }
-
-      setTimeout(() => {
-        addMessage(response, 'ai');
-      }, 800);
-    }
-
-    aiSend.addEventListener('click', () => {
-      const text = aiInput.value.trim();
-      if (text) {
-        addMessage(text, 'user');
-        aiInput.value = '';
-        handleAiResponse(text);
-      }
-    });
-
-    function handleKeyPress(e) {
-      if (e.key === 'Enter') aiSend.click();
-    }
   </script>
+  <script src="script.js"></script>
 </body>
 </html>
+
