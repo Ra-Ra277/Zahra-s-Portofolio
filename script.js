@@ -75,149 +75,286 @@
   });
 
 // JavaScript untuk AI Assistant
-document.addEventListener('DOMContentLoaded', function() {
-  // Elemen UI
-  const aiButton = document.getElementById('ai-button');
-  const aiChatContainer = document.getElementById('ai-chat-container');
-  const aiClose = document.getElementById('ai-close');
-  const aiChatMessages = document.getElementById('ai-chat-messages');
-  const aiUserInput = document.getElementById('ai-user-input');
-  const aiSend = document.getElementById('ai-send');
-  
-  // Toggle chat window
-  aiButton.addEventListener('click', () => {
-    aiChatContainer.style.display = aiChatContainer.style.display === 'flex' ? 'none' : 'flex';
-    if (aiChatContainer.style.display === 'flex') {
-      aiUserInput.focus();
-    }
-  });
-  
-  aiClose.addEventListener('click', () => {
-    aiChatContainer.style.display = 'none';
-  });
-  
-  // Fungsi untuk menampilkan indikator typing
-  function showTypingIndicator() {
-    const typingDiv = document.createElement('div');
-    typingDiv.classList.add('typing-indicator');
-    typingDiv.innerHTML = `
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
+/* FILENAME: ai-widget.js
+   DESCRIPTION: Script ini akan menyuntikkan (inject) AI Assistant ke dalam halaman HTML manapun.
+*/
+
+(function() {
+    // --- 1. DEFINISI CSS (TAMPILAN) ---
+    const widgetStyles = `
+        #ai-assistant-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        #ai-toggle-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #6c5ce7);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-size: 24px;
+            transition: all 0.3s ease;
+            animation: pulse-ai 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #ai-toggle-btn:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes pulse-ai {
+            0% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(108, 92, 231, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0); }
+        }
+        
+        #ai-chat-box {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 450px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.1);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.5) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        #ai-header {
+            padding: 15px;
+            background: linear-gradient(to right, #6c5ce7, #ff6b6b);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #ai-header h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+        
+        #ai-close-btn {
+            background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem;
+        }
+        
+        #ai-messages-area {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .ai-msg-bubble {
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        
+        .user-bubble {
+            background: #6c5ce7;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 2px;
+        }
+        
+        .bot-bubble {
+            background: #e9ecef;
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 2px;
+        }
+        
+        #ai-input-area {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            background: white;
+            display: flex;
+            gap: 10px;
+        }
+        
+        #ai-input-text {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+        
+        #ai-send-btn {
+            background: none; border: none;
+            color: #6c5ce7;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        #ai-send-btn:hover { transform: scale(1.1); color: #ff6b6b; }
+
+        /* Typing Indicator */
+        .typing-indicator { display: flex; gap: 5px; padding: 10px; background: #e9ecef; width: fit-content; border-radius: 15px; }
+        .typing-dot { width: 6px; height: 6px; background: #888; border-radius: 50%; animation: bounce 1.4s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
     `;
-    aiChatMessages.appendChild(typingDiv);
-    aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
-    return typingDiv;
-  }
-  
-  // Knowledge base untuk AI Assistant
-  const knowledgeBase = {
-    greetings: ["halo", "hai", "hi", "hello", "hei", "hola", "hey", "apa kabar"],
-    skills: ["skill", "kemampuan", "keahlian", "bisa apa", "expertise", "ability", "teknologi", "teknis"],
-    projects: ["project", "proyek", "karya", "portfolio", "pekerjaan", "hasil kerja", "aplikasi", "website"],
-    contact: ["kontak", "hubungi", "email", "telepon", "whatsapp", "media sosial", "sosmed", "instagram", "linkedin"],
-    thanks: ["terima kasih", "thanks", "thank you", "makasih", "thx", "gracias"],
-    help: ["bantuan", "help", "bantu", "tolong", "caranya", "how to", "how do", "cara"],
-    education: ["pendidikan", "education", "sekolah", "kuliah", "lulusan", "almamater", "kampus", "universitas"],
-    experience: ["pengalaman", "experience", "kerja", "bekerja", "pekerjaan", "karir", "pengalaman kerja"],
-    services: ["jasa", "service", "layanan", "freelance", "freelancer", "harga", "bayaran", "upah"],
-    about: ["tentang", "about", "siapa", "perkenalan", "intro", "perkenalkan"]
-  };
-  
-  // Responses untuk AI Assistant
-  const responses = {
-    greeting: "Halo! Senang bertemu dengan Anda. Ada yang bisa saya bantu tentang portofolio Zahra?",
-    skill: "Zahra memiliki kemampuan dalam HTML, CSS dan JavaScript. Dia juga sedang mempelajari machine learning dan AI development. Skill utamanya adalah UI/UX designer dan frontend development.",
-    project: "Zahra telah mengerjakan beberapa project termasuk website portofolio ini, aplikasi todo list, website e-commerce sederhana, dan beberapa project machine learning dasar. Semua project bisa dilihat di halaman project portofolio ini.",
-    contact: "Anda dapat menghubungi Zahra melalui email: zyulear27@gmail.com. Jangan ragu untuk menghubungi! Zahra senang berkolaborasi dalam project menarik.",
-    thanks: "Sama-sama! Senang bisa membantu. Jika ada pertanyaan lagi, silakan tanyakan saja. Jangan lupa cek project-project Zahra ya!",
-    help: "Saya di sini untuk membantu menjawab pertanyaan tentang Zahra. Anda bisa menanyakan tentang skill, project, pengalaman, pendidikan, atau cara menghubungi Zahra.",
-    education: "Zahra adalah mahasiswi dari Universitas Muhammadiyah Purwekerto Semester 5. Dia aktif dalam membuat project-project kecil dan sering mengikuti perkembangan inovasi teknologi.",
-    experience: "Zahra memiliki pengalaman magang sebagai UI/UX designer dan web developer di Upwork. Dia juga aktif dalam project freelance dan open source. Saat ini Zahra sedang mencari opportunities sebagai UI/UX designer dan frontend developer.",
-    services: "Zahra menerima jasa pembuatan website dan aplikasi web. Untuk informasi lebih lanjut tentang layanan dan harga, silakan hubungi Zahra langsung melalui email.",
-    about: "Zahra adalah seorang UI/UX designer dan programmer pemula yang passionate terhadap teknologi web dan AI. Selain coding, Zahra juga suka menulis artikel tech dan berbagi pengetahuan di blog pribadi.",
-    default: "Maaf, saya tidak mengerti pertanyaan Anda. Cukup ketik skill, freelance, project, pengalaman, pendidikan, atau cara menghubungi Zahra. Atau mungkin Anda bisa menjelaskan dengan cara berbeda?",
-  };
-  
-  // Fungsi untuk memahami pesan pengguna
-  function understandMessage(message) {
-    const lowerMessage = message.toLowerCase();
-    
-    if (knowledgeBase.greetings.some(word => lowerMessage.includes(word))) {
-      return "greeting";
-    } else if (knowledgeBase.skills.some(word => lowerMessage.includes(word))) {
-      return "skill";
-    } else if (knowledgeBase.projects.some(word => lowerMessage.includes(word))) {
-      return "project";
-    } else if (knowledgeBase.contact.some(word => lowerMessage.includes(word))) {
-      return "contact";
-    } else if (knowledgeBase.thanks.some(word => lowerMessage.includes(word))) {
-      return "thanks";
-    } else if (knowledgeBase.help.some(word => lowerMessage.includes(word))) {
-      return "help";
-    } else if (knowledgeBase.education.some(word => lowerMessage.includes(word))) {
-      return "education";
-    } else if (knowledgeBase.experience.some(word => lowerMessage.includes(word))) {
-      return "experience";
-    } else if (knowledgeBase.services.some(word => lowerMessage.includes(word))) {
-      return "services";
-    } else if (knowledgeBase.about.some(word => lowerMessage.includes(word))) {
-      return "about";
+
+    // --- 2. BUAT ELEMEN HTML ---
+    const widgetHTML = `
+        <button id="ai-toggle-btn"><i class="fas fa-robot"></i></button>
+        <div id="ai-chat-box">
+            <div id="ai-header">
+                <h3>Zahra Assistant</h3>
+                <button id="ai-close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="ai-messages-area">
+                <div class="ai-msg-bubble bot-bubble">Halo! Aku asisten virtual Zahra. Ada yang bisa dibantu tentang portfolio ini? 😊</div>
+            </div>
+            <div id="ai-input-area">
+                <input type="text" id="ai-input-text" placeholder="Tanya sesuatu..." autocomplete="off">
+                <button id="ai-send-btn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    `;
+
+    // --- 3. FUNGSI INISIALISASI ---
+    function initAIWidget() {
+        // A. Inject CSS ke Head
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = widgetStyles;
+        document.head.appendChild(styleSheet);
+
+        // B. Inject HTML ke Body
+        const container = document.createElement("div");
+        container.id = "ai-assistant-widget";
+        container.innerHTML = widgetHTML;
+        document.body.appendChild(container);
+
+        // C. Logika JavaScript (Otak AI)
+        setupAILogic();
+    }
+
+    // --- 4. LOGIKA AI (KNOWLEDGE BASE & EVENT LISTENERS) ---
+    function setupAILogic() {
+        const toggleBtn = document.getElementById('ai-toggle-btn');
+        const chatBox = document.getElementById('ai-chat-box');
+        const closeBtn = document.getElementById('ai-close-btn');
+        const inputField = document.getElementById('ai-input-text');
+        const sendBtn = document.getElementById('ai-send-btn');
+        const messagesArea = document.getElementById('ai-messages-area');
+
+        // Toggle Chat
+        toggleBtn.addEventListener('click', () => {
+            chatBox.style.display = 'flex';
+            toggleBtn.style.display = 'none';
+            inputField.focus();
+        });
+
+        closeBtn.addEventListener('click', () => {
+            chatBox.style.display = 'none';
+            toggleBtn.style.display = 'flex';
+        });
+
+        // Knowledge Base
+        const knowledgeBase = {
+            greetings: ["halo", "hai", "hi", "pagi", "siang", "malam", "assalamualaikum"],
+            about: ["siapa", "zahra", "profil", "tentang", "pembuat", "author"],
+            skills: ["skill", "bisa apa", "kemampuan", "coding", "bahasa", "tools"],
+            projects: ["project", "karya", "portfolio", "buatan", "hasil"],
+            contact: ["kontak", "email", "hubungi", "wa", "whatsapp", "ig", "instagram"],
+            games: ["game", "main", "permainan", "labirin"],
+            love: ["pacar", "jomblo", "cinta", "sayang", "love"]
+        };
+
+        const responses = {
+            greetings: "Halo kak! Selamat datang di portfolio Zahra Yulia. Mau lihat project atau main game?",
+            about: "Aku adalah AI representasi dari Zahra Yulia. Zahra adalah UI/UX Designer, Programmer, dan Penulis yang kreatif! ✨",
+            skills: "Zahra jago di UI/UX Design (Figma), Web Development (HTML, CSS, JS, PHP), dan juga menulis kreatif.",
+            projects: "Banyak project keren! Ada 'Restaurant App', 'SmartBudget', sampai game interaktif. Scroll ke bagian Projects ya!",
+            contact: "Bisa hubungi Zahra via email di zyulear27@gmail.com atau DM Instagram @zyulear.",
+            games: "Bosen? Main game aja! Zahra bikin game 'Labirin Aksara' lho. Cek menu Games di atas.",
+            love: "Waduh, privasi dong! 😜 Tapi kalau mau kasih surprise, coba klik 'Special Surprise' di bagian project.",
+            default: "Maaf, aku kurang paham. Coba tanya tentang 'Skill', 'Project', atau 'Kontak' ya! 🙏"
+        };
+
+        function getBotResponse(input) {
+            input = input.toLowerCase();
+            if (knowledgeBase.greetings.some(k => input.includes(k))) return responses.greetings;
+            if (knowledgeBase.about.some(k => input.includes(k))) return responses.about;
+            if (knowledgeBase.skills.some(k => input.includes(k))) return responses.skills;
+            if (knowledgeBase.projects.some(k => input.includes(k))) return responses.projects;
+            if (knowledgeBase.contact.some(k => input.includes(k))) return responses.contact;
+            if (knowledgeBase.games.some(k => input.includes(k))) return responses.games;
+            if (knowledgeBase.love.some(k => input.includes(k))) return responses.love;
+            return responses.default;
+        }
+
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.classList.add('ai-msg-bubble', sender === 'user' ? 'user-bubble' : 'bot-bubble');
+            div.textContent = text;
+            messagesArea.appendChild(div);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        async function handleSend() {
+            const text = inputField.value.trim();
+            if (!text) return;
+
+            // 1. User Message
+            addMessage(text, 'user');
+            inputField.value = '';
+
+            // 2. Typing Indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            messagesArea.appendChild(typingDiv);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+
+            // 3. Simulate Thinking Delay
+            await new Promise(r => setTimeout(r, 1000));
+            typingDiv.remove();
+
+            // 4. Bot Response
+            const reply = getBotResponse(text);
+            addMessage(reply, 'bot');
+        }
+
+        sendBtn.addEventListener('click', handleSend);
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSend();
+        });
+    }
+
+    // Jalankan Widget saat halaman selesai dimuat
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAIWidget);
     } else {
-      return "default";
+        initAIWidget();
     }
-  }
-  
-  // Fungsi untuk menghasilkan respons AI
-  function generateAIResponse(message) {
-    const intent = understandMessage(message);
-    return responses[intent] || responses.default;
-  }
-  
-  // Fungsi untuk mengirim pesan ke AI (rule-based)
-  async function sendMessageToAI(message) {
-    // Simulasi delay seperti AI sedang memproses
-    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 700));
-    
-    // Generate respons berdasarkan aturan
-    return generateAIResponse(message);
-  }
-  
-  // Fungsi untuk menambahkan pesan ke chat
-  function addMessage(text, isUser) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message');
-    messageDiv.classList.add(isUser ? 'user-message' : 'ai-message');
-    messageDiv.textContent = text;
-    aiChatMessages.appendChild(messageDiv);
-    aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
-  }
-  
-  // Event listener untuk mengirim pesan
-  aiSend.addEventListener('click', async () => {
-    const message = aiUserInput.value.trim();
-    if (message) {
-      addMessage(message, true);
-      aiUserInput.value = '';
-      aiSend.disabled = true;
-      
-      // Tampilkan indikator typing
-      const typingIndicator = showTypingIndicator();
-      
-      // Kirim ke AI dan dapatkan balasan
-      const reply = await sendMessageToAI(message);
-      
-      // Hapus indikator typing dan tampilkan balasan
-      aiChatMessages.removeChild(typingIndicator);
-      addMessage(reply, false);
-      aiSend.disabled = false;
-    }
-  });
-  
-  // Juga kirim dengan Enter key
-  aiUserInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      aiSend.click();
-    }
-  });
-});
+
+})();
+
