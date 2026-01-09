@@ -1,506 +1,985 @@
- <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="id">
 <head>
-  <!-- Metadata dasar -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zahra's Portfolio</title>
+  <title>Zahra Yulia | Creative Portfolio</title>
 
-  <!-- SEO meta -->
-  <meta name="description" content="Portofolio Zahra - UI/UX Designer, Programmer, dan Penulis.">
-  <meta name="keywords" content="Zahra, Portfolio, UI UX, Web Design, Programming, Blogging">
-  <meta name="author" content="Zahra">
+  <!-- SEO Meta -->
+  <meta name="description" content="Portofolio Zahra Yulia - UI/UX Designer, Programmer, dan Penulis dengan sentuhan kreativitas.">
+  <meta name="keywords" content="Zahra Yulia, Portfolio, UI UX, Web Design, Writer, Games, Creative">
+  <meta name="author" content="Zahra Yulia">
 
-  <!-- Bootstrap & Font Awesome -->
+  <!-- Fonts: Playfair Display (Elegan) & Poppins (Modern) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css">
+  <!-- Custom CSS Styles -->
+  <style>
+    /* --- VARIABLES & BASE --- */
+    :root {
+      --primary-color: #ff6b6b; /* Warna playful (coral red) */
+      --secondary-color: #6c5ce7; /* Warna elegan (purple) */
+      --dark-bg: #0f0c29;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-light: #f1f2f6;
+      --text-muted: #a4b0be;
+    }
 
-  <meta http-equiv="Content-Security-Policy"
-      content="
-        default-src 'self';
-        script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
-        style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com;
-        font-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.gstatic.com;
-        img-src 'self' data: https:;
-        media-src 'self' https://cdn.pixabay.com https://*.spotifycdn.com https://*.scdn.co;
-        frame-src 'self' https://www.youtube.com https://open.spotify.com https://collshp.com https://www.figma.com https://ra-ra277.github.io;
-        connect-src 'self';
-      ">
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: var(--text-light);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
 
+    h1, h2, h3, h4, h5, .navbar-brand, .section-title {
+      font-family: 'Playfair Display', serif;
+    }
+
+    a { text-decoration: none; transition: 0.3s; }
+
+    /* --- CUSTOM SCROLLBAR --- */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--dark-bg); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color)); border-radius: 10px; }
+
+    /* --- LOADER --- */
+    .loader-wrapper {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--dark-bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+    .loader-heart {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+      transform: rotate(45deg);
+      transform-origin: 40px 40px;
+    }
+    .loader-heart div {
+      top: 32px;
+      left: 32px;
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background: var(--primary-color);
+      animation: loader-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    .loader-heart div:after,
+    .loader-heart div:before {
+      content: " ";
+      position: absolute;
+      display: block;
+      width: 32px;
+      height: 32px;
+      background: var(--primary-color);
+    }
+    .loader-heart div:before { left: -24px; border-radius: 50% 0 0 50%; }
+    .loader-heart div:after { top: -24px; border-radius: 50% 50% 0 0; }
+    @keyframes loader-heart {
+      0% { transform: scale(0.95); }
+      5% { transform: scale(1.1); }
+      39% { transform: scale(0.85); }
+      45% { transform: scale(1); }
+      60% { transform: scale(0.95); }
+      100% { transform: scale(0.9); }
+    }
+
+    /* --- NAVBAR --- */
+    .navbar {
+      background: rgba(15, 12, 41, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 15px 0;
+      transition: 0.4s;
+    }
+    .navbar-brand {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-link {
+      color: var(--text-light) !important;
+      font-weight: 500;
+      margin-left: 15px;
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0; height: 2px;
+      bottom: 0; left: 0;
+      background: var(--primary-color);
+      transition: 0.3s;
+    }
+    .nav-link:hover::after { width: 100%; }
+    .navbar-toggler { border: none; filter: invert(1); }
+
+    /* --- HERO SECTION --- */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding-top: 80px;
+    }
+    .hero-video {
+      position: absolute;
+      top: 50%; left: 50%;
+      min-width: 100%; min-height: 100%;
+      width: auto; height: auto;
+      transform: translate(-50%, -50%);
+      z-index: -2;
+      opacity: 0.4;
+      object-fit: cover;
+    }
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to bottom, rgba(15,12,41,0.3), var(--dark-bg));
+      z-index: -1;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    .hero h1 span { color: var(--primary-color); }
+    .hero .lead {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+    }
+    .btn-custom {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      border: none;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+      transition: transform 0.3s;
+    }
+    .btn-custom:hover {
+      transform: translateY(-3px) scale(1.05);
+      color: white;
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    }
+    .btn-outline-custom {
+      background: transparent;
+      border: 2px solid var(--text-light);
+      color: var(--text-light);
+      padding: 10px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn-outline-custom:hover {
+      background: white;
+      color: var(--dark-bg);
+    }
+
+    /* --- SCROLLING TEXT --- */
+    .scrolling-wrapper {
+      background: var(--primary-color);
+      padding: 15px 0;
+      transform: rotate(-2deg);
+      width: 105%;
+      margin-left: -2.5%;
+      margin-bottom: 50px;
+      overflow: hidden;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .scrolling-text {
+      display: inline-block;
+      animation: marquee 20s linear infinite;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+    }
+    .scrolling-text span { margin: 0 30px; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* --- SECTIONS GENERAL --- */
+    .section { padding: 80px 0; }
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      position: relative;
+      display: inline-block;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: var(--primary-color);
+      margin: 10px auto;
+      border-radius: 2px;
+    }
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 50px;
+    }
+
+    /* --- CARDS (Glassmorphism) --- */
+    .card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(5px);
+      border-radius: 20px;
+      color: var(--text-light);
+      transition: 0.4s ease;
+      overflow: hidden;
+      height: 100%;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      border-color: var(--primary-color);
+    }
+    .card-body { padding: 2rem; position: relative; z-index: 2; }
+    .card-title { font-weight: 700; margin-bottom: 15px; }
+    .card-text { color: #d1d8e0; font-size: 0.95rem; line-height: 1.6; }
+    
+    .icon-wrapper {
+      width: 60px; height: 60px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      transition: 0.3s;
+    }
+    .card:hover .icon-wrapper {
+      background: var(--primary-color);
+      transform: scale(1.1) rotate(10deg);
+    }
+    .icon-wrapper i { color: white !important; }
+
+    /* --- ANIMATION ON SCROLL --- */
+    .animate { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+    .animate.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+
+    /* --- AI ASSISTANT --- */
+    #ai-assistant {
+      position: fixed;
+      bottom: 30px; right: 30px;
+      z-index: 1000;
+    }
+    #ai-button {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      color: white;
+      border: none;
+      font-weight: 700;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: 0.3s;
+      animation: pulse 2s infinite;
+    }
+    #ai-button:hover { transform: scale(1.1); }
+    
+    #ai-chat-container {
+      position: absolute;
+      bottom: 80px; right: 0;
+      width: 350px;
+      background: #1e1b38;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+      border: 1px solid var(--glass-border);
+      transform-origin: bottom right;
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #ai-chat-container.active { display: flex; }
+    
+    #ai-chat-header {
+      background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+    #ai-chat-header h3 { margin: 0; font-size: 1rem; font-family: 'Poppins', sans-serif; }
+    #ai-close { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
+    
+    #ai-chat-messages {
+      height: 300px;
+      padding: 15px;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.2);
+    }
+    .message {
+      margin-bottom: 10px;
+      padding: 10px 15px;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      max-width: 80%;
+    }
+    .ai-message {
+      background: rgba(255,255,255,0.1);
+      color: var(--text-light);
+      border-bottom-left-radius: 2px;
+    }
+    .user-message {
+      background: var(--primary-color);
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 2px;
+      text-align: right;
+    }
+    
+    #ai-chat-input {
+      padding: 15px;
+      display: flex;
+      border-top: 1px solid var(--glass-border);
+      background: #1e1b38;
+    }
+    #ai-user-input {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 8px 15px;
+      color: white;
+      outline: none;
+    }
+    #ai-send {
+      background: none; border: none;
+      color: var(--primary-color);
+      margin-left: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* --- CONTACT FORM --- */
+    .form-control {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      color: white;
+      border-radius: 10px;
+    }
+    .form-control:focus {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border-color: var(--primary-color);
+      box-shadow: none;
+    }
+    .contact-card {
+      text-align: center;
+      padding: 30px;
+      background: var(--glass-bg);
+      border-radius: 20px;
+      border: 1px solid var(--glass-border);
+      transition: 0.3s;
+    }
+    .contact-card:hover { background: rgba(255,255,255,0.1); }
+    .contact-card i {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      background: #0a081c;
+      padding: 40px 0;
+      text-align: center;
+      border-top: 1px solid var(--glass-border);
+      margin-top: 50px;
+    }
+    footer a i {
+      transition: 0.3s;
+      color: var(--text-muted);
+    }
+    footer a:hover i {
+      color: var(--primary-color);
+      transform: translateY(-5px);
+    }
+
+    /* --- BACK TO TOP --- */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px; left: 30px;
+      width: 45px; height: 45px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+      z-index: 999;
+    }
+    .back-to-top.active { opacity: 1; visibility: visible; }
+    .back-to-top:hover { background: var(--primary-color); border-color: var(--primary-color); }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 107, 107, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.5) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+  </style>
 
   <!-- Favicon -->
   <link rel="icon" href="aset/favicon.ico" type="image/png">
 </head>
 
-
 <body>
 
-  <!-- Loading Screen -->
+  <!-- Loading Screen (Cute Heart Animation) -->
   <div class="loader-wrapper">
-    <div class="loader"></div>
+    <div class="loader-heart"></div>
   </div>
-
-  <!-- Back to Top Button -->
-  <a href="#home" class="back-to-top">
-    <i class="fas fa-arrow-up"></i>
-  </a>
 
   <!-- Navbar -->
-<nav class="navbar navbar-expand-lg fixed-top">
-  <div class="container">
-    <a class="navbar-brand" href="#">MyPortfolio</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" 
-            aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
-        <li class="nav-item"><a class="nav-link" href="#museum">Museum Works</a></li>
-        <li class="nav-item"><a class="nav-link" href="#games">Games</a></li>
-        <li class="nav-item"><a class="nav-link" href="#music">Music Playlist</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-      </ul>
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">zyulear</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+          <li class="nav-item"><a class="nav-link" href="#museum">Museum</a></li>
+          <li class="nav-item"><a class="nav-link" href="#games">Games</a></li>
+          <li class="nav-item"><a class="nav-link" href="#music">Music</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
- <!-- Hero Section -->
-<section id="home" class="hero">
-    <video autoplay muted loop class="hero-video">
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <!-- Video background (Online Source for Reliability) -->
+    <video autoplay muted loop class="hero-video" poster="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop">
+      <!-- Fallback video if desired, otherwise subtle background remains -->
       <source src="https://cdn.pixabay.com/video/2024/05/18/212404_large.mp4" type="video/mp4">
-      Your browser does not support the video tag.
     </video>
     <div class="hero-overlay"></div>
     
     <div class="container">
       <div class="row align-items-center">
-        <div class="col-lg-6">
-          <div class="hero-content">
-            <h1>Welcome to My Creative World</h1>
-            <p class="lead">Explore my projects, museum works, and games. Hope You Enjoy In My World :)</p>
-            <div class="hero-buttons d-flex mt-4 justify-content-center">
-              <a href="#contact" class="btn btn-dark me-3">Contact Me</a>
-              <a href="#projects" class="btn btn-danger">View Projects</a>
+        <div class="col-lg-6 animate visible">
+          <h1>Hello, I'm <br><span>Zahra Yulia</span></h1>
+          <p class="lead">Designer. Programmer. Dreamer.<br>Welcome to my creative universe where technology meets art.</p>
+          <div class="d-flex gap-3 mt-4">
+            <a href="#projects" class="btn btn-custom"><i class="fas fa-magic me-2"></i>View Magic</a>
+            <a href="#contact" class="btn btn-outline-custom">Say Hi!</a>
+          </div>
+        </div>
+        <!-- Optional: Add a 3D illustration or floating image here if desired -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Scrolling Marquee (Playful Element) -->
+  <div class="scrolling-wrapper">
+    <div class="scrolling-text">
+      <span>✨ UI/UX Design</span>
+      <span>🚀 Web Development</span>
+      <span>✍️ Creative Writing</span>
+      <span>🎮 Game Design</span>
+      <span>🎨 Digital Art</span>
+      <span>💖 Zahra Yulia</span>
+      <span>✨ UI/UX Design</span>
+      <span>🚀 Web Development</span>
+    </div>
+  </div>
+
+  <!-- Projects Section -->
+  <section id="projects" class="section">
+    <div class="container">
+      <h2 class="section-title">Latest Projects</h2>
+      <p class="section-subtitle">Crafted with logic, designed with love.</p>
+      
+      <div class="row g-4">
+        <!-- Item 1 -->
+        <div class="col-md-4 animate">
+          <div class="card">
+            <div class="card-body">
+              <div class="icon-wrapper"><i class="fas fa-utensils fa-lg"></i></div>
+              <h5 class="card-title">Restaurant Menu App</h5>
+              <p class="card-text">A delicious UI/UX prototype for modern dining. Focused on user appetite and visual appeal.</p>
+              <a href="https://www.figma.com/proto/jt1kDsGNY1DzS6z2BGsHve/Aplikasi-Menu" class="btn btn-sm btn-outline-light mt-2" target="_blank">See Prototype <i class="fas fa-arrow-right ms-1"></i></a>
             </div>
           </div>
         </div>
-        <div class="col-lg-6">
-          <div class="hero-image">
-            <img src="background.jpg" alt= "Zahra's Profile" class="img-fluid">
+
+        <!-- Item 2 -->
+        <div class="col-md-4 animate delay-1">
+          <div class="card">
+            <div class="card-body">
+              <div class="icon-wrapper"><i class="fas fa-graduation-cap fa-lg"></i></div>
+              <h5 class="card-title">Academic Project</h5>
+              <p class="card-text">Collaborative final semester project solving real-world problems through code.</p>
+              <a href="https://www.figma.com/proto/dREFL6kfq7j1gR3gD0Cisp/Project-UAS" class="btn btn-sm btn-outline-light mt-2" target="_blank">View Case Study <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 3 (Surprise) -->
+        <div class="col-md-4 animate delay-2">
+          <div class="card" style="border-color: var(--primary-color);">
+            <div class="card-body">
+              <div class="icon-wrapper" style="background: var(--primary-color);"><i class="fas fa-gift fa-lg"></i></div>
+              <h5 class="card-title">Special Surprise</h5>
+              <p class="card-text">Psst! I have something special just for you. Click to unlock a little magic.</p>
+              <a href="loveyou.html" class="btn btn-sm btn-light text-dark mt-2" target="_blank">Open Gift 🎁</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="col-md-4 animate">
+          <div class="card">
+            <div class="card-body">
+              <div class="icon-wrapper"><i class="fas fa-book-reader fa-lg"></i></div>
+              <h5 class="card-title">BookHeaven Library</h5>
+              <p class="card-text">Step into a digital world of infinite possibilities and literary wonders.</p>
+              <a href="https://ra-ra277.github.io/bookheaven/" class="btn btn-sm btn-outline-light mt-2" target="_blank">Visit Library <i class="fas fa-external-link-alt ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="col-md-4 animate delay-1">
+          <div class="card">
+            <div class="card-body">
+              <div class="icon-wrapper"><i class="fas fa-shopping-bag fa-lg"></i></div>
+              <h5 class="card-title">BeautyZTZ E-Commerce</h5>
+              <p class="card-text">Increasing conversion and retention through attractive design and innovation.</p>
+              <a href="https://ra-ra277.github.io/BeautyZTZ/" class="btn btn-sm btn-outline-light mt-2" target="_blank">Shop Now <i class="fas fa-external-link-alt ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="col-md-4 animate delay-2">
+          <div class="card">
+            <div class="card-body">
+              <div class="icon-wrapper"><i class="fas fa-wallet fa-lg"></i></div>
+              <h5 class="card-title">SmartBudget</h5>
+              <p class="card-text">Manage your finances smartly. Track income and expenses with ease.</p>
+              <a href="https://ra-ra277.github.io/SmartBudget/" class="btn btn-sm btn-outline-light mt-2" target="_blank">Manage Money <i class="fas fa-external-link-alt ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Additional Projects -->
+        <div class="col-md-4 animate">
+           <div class="card">
+            <div class="card-body">
+              <div class="icon-wrapper"><i class="fas fa-home fa-lg"></i></div>
+              <h5 class="card-title">KostMe</h5>
+              <p class="card-text">Personal design experiment for boarding house finder platform.</p>
+              <a href="https://kostme.netlify.app/" class="btn btn-sm btn-outline-light mt-2" target="_blank">Preview <i class="fas fa-external-link-alt ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4 animate delay-1">
+           <div class="card">
+            <div class="card-body">
+              <div class="icon-wrapper"><i class="fas fa-building fa-lg"></i></div>
+              <h5 class="card-title">Startup KostMe</h5>
+              <p class="card-text">Official startup website built with WordPress & Teamwork.</p>
+              <a href="https://kostme.id/" class="btn btn-sm btn-outline-light mt-2" target="_blank">Visit Official <i class="fas fa-external-link-alt ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- My E-Commerce Section -->
+  <section class="section" style="background: rgba(0,0,0,0.2);">
+    <div class="container">
+      <h2 class="section-title">My Shop & Affiliates</h2>
+      <p class="section-subtitle">Curated products just for you.</p>
+      <div class="row justify-content-center">
+        <div class="col-lg-5 mb-4 animate">
+          <div class="card">
+             <div class="card-body p-0">
+               <iframe src="https://ra-ra277.github.io/ztz/" style="width:100%; height:350px; border:none;"></iframe>
+               <div class="p-3 text-center">
+                 <h5 class="mb-2">ZTZ Official Store</h5>
+                 <a href="https://ra-ra277.github.io/ztz/" class="btn btn-custom btn-sm w-100" target="_blank">Visit Store</a>
+               </div>
+             </div>
+          </div>
+        </div>
+        <div class="col-lg-5 mb-4 animate delay-1">
+          <div class="card">
+             <div class="card-body p-0">
+               <iframe src="https://collshp.com/raa27_?share_channel_code=1" style="width:100%; height:350px; border:none;"></iframe>
+               <div class="p-3 text-center">
+                 <h5 class="mb-2">Shopee Faves</h5>
+                 <a href="https://collshp.com/raa27_?share_channel_code=1" class="btn btn-custom btn-sm w-100" target="_blank">Shop My Faves</a>
+               </div>
+             </div>
           </div>
         </div>
       </div>
     </div>
-</section>
+  </section>
 
-<!-- SCROLLING CATEGORY -->
-<section>
-  <div class="scrolling-text">
-    <span>Design +</span>
-    <span>App Design +</span>
-    <span>Dashboard +</span>
-    <span>Wireframe +</span>
-    <span>User Research +</span>
-    <span>Zahra +</span>
-    <span>Portfolio +</span>
-  </div>
-</section>
-
-<!-- Projects -->
-<section id="projects" class="section museum-section">
-  <div class="container">
-    <h2 class="section-title">Projects</h2>
-    <p class="section-subtitle">Take a look at my latest creative work</p>
-    <div class="row">
-      <div class="col-md-4 mb-4 animate">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-utensils fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">Restaurant Menu App</h5>
-            <p class="card-text">UI/UX prototype for a restaurant menu ordering application. Designed with Figma with a focus on user experience and visual appeal.</p>
-            <a href="https://www.figma.com/proto/jt1kDsGNY1DzS6z2BGsHve/Aplikasi-Menu?node-id=213-3703&t=ehUqXjT95iOp0XyL-1&scaling=scale-down&content-scaling=fixed&page-id=2%3A2663&starting-point-node-id=213%3A3703&show-proto-sidebar=1" class="btn btn-dark mt-3" target="_blank">View Design</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4 animate delay-1">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-graduation-cap fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">Final Semester Project</h5>
-            <p class="card-text">A prototype application developed with my team as part of the Final Semester Examination. Focused on solving real-world problems.</p>
-            <a href="https://www.figma.com/proto/dREFL6kfq7j1gR3gD0Cisp/Project-UAS?node-id=1-4&p=f&t=1xUbcymkCk9ny63I-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A4&show-proto-sidebar=1" class="btn btn-dark mt-3" target="_blank">View Design</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4 animate delay-2">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-surprise fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">Special Surprise</h5>
-            <p class="card-text">I have something special just for you! Click the link below to discover a little surprise that I've created with love and creativity.</p>
-            <a href="loveyou.html" class="btn btn-dark mt-3" target="_blank">Discover Surprise</a>
-          </div>
-        </div>
-      </div>
-       <div class="col-md-4 mb-4 animate delay-2">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-book-reader fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">Library</h5>
-            <p class="card-text">Every time you enter a library, you step into a world of infinite possibilities.</p>
-            <a href="https://ra-ra277.github.io/bookheaven/" class="btn btn-dark mt-3" target="_blank">Update :D</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4 animate delay-2">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-leaf fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">Special Project</h5>
-            <p class="card-text">This is my time to rise and show what i can do. This comeback project will be a testament to my passion!</p>
-            <a href="l.html" class="btn btn-dark mt-3" target="_blank">Coming soon</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4 animate delay-2">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-mobile-alt fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">E-commerce</h5>
-            <p class="card-text">I plan to develop a new e-commerce website for businesses with a focus on increasing conversion and customer retention through attractive design and innovative features.</p>
-            <a href="https://ra-ra277.github.io/BeautyZTZ/" class="btn btn-dark mt-3" target="_blank">Update :D</a>
-          </div>
-        </div>
-      </div>
-       <div class="col-md-4 mb-4 animate delay-2">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-lightbulb fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">SmartBudget</h5>
-            <p class="card-text">Smart Budget app is a financial management app that helps you track your income and expenses to control your personal finances.</p>
-            <a href="https://ra-ra277.github.io/SmartBudget/" class="btn btn-dark mt-3" target="_blank">Update :D</a>
-          </div>
-        </div>
-      </div>
-       <div class="col-md-4 mb-4 animate delay-2">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-globe-asia fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">Nusantara Global</h5>
-            <p class="card-text">Apps designed with Figma can create the impression of an authentic, trusted global export business platform and facilitate communication with suppliers from around the world.</p>
-            <a href="https:" class="btn btn-dark mt-3" target="_blank">Coming soon</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4 animate delay-2">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-seedling  fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">KostMe</h5>
-            <p class="card-text">Web yang aku desain sendiri untuk bahan percobaan</p>
-            <a href="https://kostme.netlify.app/" class="btn btn-dark mt-3" target="_blank">Update :D </a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4 animate delay-2">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-building fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">Startup KostMe</h5>
-            <p class="card-text">Startup yang dibangun bersama team KWU dan Web yang dihosting dengan wordspress</p>
-            <a href="https://kostme.id/" class="btn btn-dark mt-3" target="_blank">Update :D </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!--My E-commerce-->
-<section id="E-commerce" class="section">
-  <div class="container">
-    <h2 class="section-title">My E-commerce</h2>
-    <p class="section-subtitle">Check out my products</p>
-    <div class="row justify-content-center">
-      <div class="col-lg-6 mb-4 animate">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title text-center mb-4"><i class=""></i>ZTZ.com</h5>
-            <div class="ratio ratio-16x9">
-              <iframe style="border-radius:12px" src="https://ra-ra277.github.io/ztz/" width="100%" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-            </div>
-            <a href="https://ra-ra277.github.io/ztz/" class="btn btn-dark mt-3" target="_blank">Visit ZTZ.com</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6 mb-4 animate delay-1">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title text-center mb-4"><i class=""></i>Affiliate Shopee</h5>
-            <div class="ratio ratio-16x9">
-              <iframe width="100%" height="315" src="https://collshp.com/raa27_?share_channel_code=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <a href="https://collshp.com/raa27_?share_channel_code=1" class="btn btn-dark mt-3">Visit Now</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Museum -->
-<section id="museum" class="section museum-section">
-  <div class="container">
-    <h2 class="section-title">Museum Works</h2>
-    <p class="section-subtitle">Insights into my creative works and writings</p>
-    <div class="row">
-      <div class="col-md-4 mb-4 animate">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-pen-fancy fa-2x text-primary"></i>
-            </div>
-            <h3 class="card-title">Writings & Poetry</h3>
-            <p class="card-text">Collection of poems, short stories, and other writings. One of them is the work "Rindu". More can be read on my personal blog.</p>
-            <a href="https://wordsofartbyzyulear.blogspot.com/2025/02/tentang-rindu.html" class="btn btn-dark mt-3" target="_blank">Visit Blog</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4 animate delay-1">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-camera fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">Photography Showcase</h5>
-            <p class="card-text">A gallery of photographs I have taken, capturing moments and emotions through my lens. A visual diary of my perspective.</p>
-            <a href="photo.html" class="btn btn-dark mt-3" target="_blank">Visit Gallery</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4 animate delay-2">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-lightbulb fa-2x text-primary"></i>
-            </div>
-            <h5 class="card-title">Education & Innovation Blog</h5>
-            <p class="card-text">Thoughts on the presentation of words in the art of technological innovation and digital creativity in the modern era.</p>
-            <a href="https://wordsofartbyzyulear.blogspot.com/2025/02/paradigma-inovasi-dan-peran-teknologi.html" class="btn btn-dark mt-3" target="_blank">Visit Blog</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Games -->
-<section id="games" class="section">
-  <div class="container">
-    <h2 class="section-title">Games</h2>
-    <p class="section-subtitle">Check out my interactive game projects</p>
-    <div class="row">
-      <div class="col-md-6 mb-4 animate">
-        <div class="card h-100">
-          <div class="card-body text-center">
-            <i class="fas fa-gamepad fa-3x mb-3 text-primary"></i>
-            <h5 class="card-title">Interactive Adventure</h5>
-            <p class="card-text">An interactive adventure game with engaging storyline and beautiful visuals. Available on Web platform.</p>
-            <a href="game.html" class="btn btn-dark mt-3">Play Now</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 mb-4 animate delay-1">
-        <div class="card h-100">
-          <div class="card-body text-center">
-            <i class="fas fa-puzzle-piece fa-3x mb-3 text-primary"></i>
-            <h5 class="card-title">Puzzle Challenge</h5>
-            <p class="card-text">A puzzle-solving experience that will test your logic and creativity. Available on Web platform.</p>
-            <a href="game1.html" class="btn btn-dark mt-3">Play Now</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 mb-4 animate delay-1">
-         <div class="card h-100">
-           <div class="card-body text-center">
-             <i class="fas fa-chess fa-3x mb-3 text-primary"></i>
-             <h5 class="card-title">Labirin Aksara I</h5>
-             <p class="card-text">Menyusun Jejak, Menjaga Tradisi. Available on Web platform.</p>
-             <a href="game3.html" class="btn btn-dark mt-3">Play Now</a>
-           </div>
-         </div>
-       </div>
-       <div class="col-md-6 mb-4 animate delay-1">
-         <div class="card h-100">
-           <div class="card-body text-center">
-             <i class="fas fa-map fa-3x mb-3 text-primary"></i>
-             <h5 class="card-title">Labirin Aksara II</h5>
-             <p class="card-text">Menyusun Jejak, Menjaga Tradisi dan Harmoni. Available on Web platform.</p>
-             <a href="game4.html" class="btn btn-dark mt-3">Play Now</a>
-           </div>
-         </div>
-       </div>
-    </div>
-  </div>
-</section>
-
-<!-- Music -->
-<section id="music" class="section museum-section">
-  <div class="container">
-    <h2 class="section-title">Music Playlist</h2>
-    <p class="section-subtitle">Listen to my current favorite tracks and inspirations</p>
-    <div class="row justify-content-center">
-      <div class="col-lg-6 mb-4 animate">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title text-center mb-4"><i class="fab fa-spotify me-2"></i>Spotify Playlist</h5>
-            <div class="ratio ratio-16x9">
-              <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/5bRuo6FcK4tnEryZqPFkb9" width="100%" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+  <!-- Museum Works (Writings) -->
+  <section id="museum" class="section">
+    <div class="container">
+      <h2 class="section-title">Museum of Thoughts</h2>
+      <p class="section-subtitle">Where words meet emotions.</p>
+      <div class="row g-4">
+        <div class="col-md-4 animate">
+          <div class="card text-center">
+            <div class="card-body">
+              <i class="fas fa-feather-alt fa-3x mb-3" style="color: var(--primary-color)"></i>
+              <h3 class="h5">Poetry: "Rindu"</h3>
+              <p class="card-text">A collection of whispers from the heart. Dive into the depth of longing.</p>
+              <a href="https://wordsofartbyzyulear.blogspot.com/2025/02/tentang-rindu.html" class="btn btn-link text-white" target="_blank">Read Poem</a>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-lg-6 mb-4 animate delay-1">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title text-center mb-4"><i class="fab fa-youtube me-2"></i>YouTube Playlist</h5>
-            <div class="ratio ratio-16x9">
-              <iframe width="100%" height="315" src="https://www.youtube.com/embed/playlist?list=PLwSEfSwyXXwIyXhoKl05T1NEABXDXHe5D" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="col-md-4 animate delay-1">
+          <div class="card text-center">
+            <div class="card-body">
+              <i class="fas fa-camera-retro fa-3x mb-3" style="color: var(--secondary-color)"></i>
+              <h3 class="h5">Visual Diary</h3>
+              <p class="card-text">Capturing moments that flee, turning them into eternal memories.</p>
+              <a href="photo.html" class="btn btn-link text-white" target="_blank">View Gallery</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 animate delay-2">
+          <div class="card text-center">
+            <div class="card-body">
+              <i class="fas fa-brain fa-3x mb-3" style="color: var(--primary-color)"></i>
+              <h3 class="h5">Tech & Innovation</h3>
+              <p class="card-text">Analyzing the intersection of art, technology, and modern innovation.</p>
+              <a href="https://wordsofartbyzyulear.blogspot.com/2025/02/paradigma-inovasi-dan-peran-teknologi.html" class="btn btn-link text-white" target="_blank">Read Article</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Contact -->
-<section id="contact" class="section">
-  <div class="container">
-    <h2 class="section-title">📬 Contact Me</h2>
-    <p class="section-subtitle">I'd love to hear from you and collaborate on exciting projects!</p>
-    <div class="row mt-5">
-      <div class="col-lg-6 mb-4 animate">
-        <div class="card h-100">
-          <div class="card-body">
-            <h4 class="card-title mb-4">Send me a message</h4>
+  <!-- Games Section -->
+  <section id="games" class="section" style="background: linear-gradient(to bottom, var(--dark-bg), #1a1a2e);">
+    <div class="container">
+      <h2 class="section-title">Game Zone</h2>
+      <p class="section-subtitle">Play, relax, and enjoy my interactive creations.</p>
+      <div class="row g-4">
+        <div class="col-md-6 animate">
+          <div class="card flex-row align-items-center p-3">
+            <div class="icon-wrapper mb-0 me-3"><i class="fas fa-gamepad"></i></div>
+            <div>
+              <h5 class="mb-1">Interactive Adventure</h5>
+              <a href="game.html" class="text-info text-decoration-none small">Play Now <i class="fas fa-play ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 animate delay-1">
+          <div class="card flex-row align-items-center p-3">
+            <div class="icon-wrapper mb-0 me-3"><i class="fas fa-puzzle-piece"></i></div>
+            <div>
+              <h5 class="mb-1">Puzzle Challenge</h5>
+              <a href="game1.html" class="text-info text-decoration-none small">Play Now <i class="fas fa-play ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 animate">
+          <div class="card flex-row align-items-center p-3">
+            <div class="icon-wrapper mb-0 me-3"><i class="fas fa-chess-rook"></i></div>
+            <div>
+              <h5 class="mb-1">Labirin Aksara I</h5>
+              <a href="game3.html" class="text-info text-decoration-none small">Play Now <i class="fas fa-play ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 animate delay-1">
+          <div class="card flex-row align-items-center p-3">
+            <div class="icon-wrapper mb-0 me-3"><i class="fas fa-map-marked-alt"></i></div>
+            <div>
+              <h5 class="mb-1">Labirin Aksara II</h5>
+              <a href="game4.html" class="text-info text-decoration-none small">Play Now <i class="fas fa-play ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Music Section -->
+  <section id="music" class="section">
+    <div class="container">
+      <h2 class="section-title">My Vibe</h2>
+      <p class="section-subtitle">Tunes that fuel my creativity.</p>
+      <div class="row">
+        <div class="col-md-6 mb-4 animate">
+          <div class="card p-2">
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/5bRuo6FcK4tnEryZqPFkb9?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4 animate delay-1">
+          <div class="card p-2 h-100">
+             <iframe width="100%" height="100%" style="border-radius:12px; min-height: 350px;" src="https://www.youtube.com/embed/playlist?list=PLwSEfSwyXXwIyXhoKl05T1NEABXDXHe5D" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2 class="section-title">Let's Connect</h2>
+      <p class="section-subtitle">Have a project? Or just want to say hi?</p>
+      
+      <div class="row mt-5">
+        <div class="col-lg-6 mb-4 animate">
+          <div class="card h-100 p-4">
+            <h4 class="mb-4">Send Message</h4>
             <form id="contactForm">
               <div class="mb-3">
-                <input type="text" class="form-control" placeholder="Your Name" required>
+                <input type="text" class="form-control py-3" placeholder="Your Name" required>
               </div>
               <div class="mb-3">
-                <input type="email" class="form-control" placeholder="Your Email" required>
+                <input type="email" class="form-control py-3" placeholder="Your Email" required>
               </div>
               <div class="mb-3">
-                <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
+                <textarea class="form-control py-3" rows="5" placeholder="Tell me something..." required></textarea>
               </div>
-              <button type="submit" class="btn btn-danger w-100">Send Message</button>
+              <button type="submit" class="btn btn-custom w-100">Send Message 🚀</button>
             </form>
           </div>
         </div>
-      </div>
-      <div class="col-lg-6 animate delay-1">
-        <div class="row h-100">
-          <div class="col-md-6 mb-3">
-            <div class="contact-card h-100">
-              <i class="fab fa-instagram"></i>
-              <h5>Instagram</h5>
-              <p><a href="https://instagram.com/zyulear" target="_blank">@zyulear</a></p>
+        
+        <div class="col-lg-6 animate delay-1">
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="contact-card h-100">
+                <i class="fab fa-instagram"></i>
+                <h5>Instagram</h5>
+                <a href="https://instagram.com/zyulear" target="_blank" class="text-muted small">@zyulear</a>
+              </div>
             </div>
-          </div>
-          <div class="col-md-6 mb-3">
-            <div class="contact-card h-100">
-              <i class="fas fa-envelope"></i>
-              <h5>Email</h5>
-              <p><a href="mailto:zyulear27@gmail.com">zyulear27@gmail.com</a></p>
+            <div class="col-6">
+              <div class="contact-card h-100">
+                <i class="fas fa-envelope"></i>
+                <h5>Email</h5>
+                <a href="mailto:zyulear27@gmail.com" class="text-muted small">zyulear27@gmail.com</a>
+              </div>
             </div>
-          </div>
-          <div class="col-md-6 mb-3">
-            <div class="contact-card h-100">
-              <i class="fas fa-blog"></i>
-              <h5>Blog</h5>
-              <p><a href="http://wordsofartbyzyulear.blogspot.com" target="_blank">Words of Art</a></p>
+            <div class="col-6">
+              <div class="contact-card h-100">
+                <i class="fas fa-blog"></i>
+                <h5>Blog</h5>
+                <a href="http://wordsofartbyzyulear.blogspot.com" target="_blank" class="text-muted small">Words of Art</a>
+              </div>
             </div>
-          </div>
-          <div class="col-md-6 mb-3">
-            <div class="contact-card h-100">
-              <i class="fab fa-linkedin"></i>
-              <h5>LinkedIn</h5>
-              <p><a href="#" target="_blank">Zahra Yulia</a></p>
+            <div class="col-6">
+              <div class="contact-card h-100">
+                <i class="fab fa-linkedin"></i>
+                <h5>LinkedIn</h5>
+                <a href="#" class="text-muted small">Zahra Yulia</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-
-  <!-- ======= AI ASSISTANT ======= -->
-  <div id="ai-assistant">
-    <button id="ai-button">AI</button>
-    <div id="ai-chat-container">
-      <div id="ai-chat-header">
-        <h3>AI Assistant Zahra</h3>
-        <button id="ai-close">✕</button>
-      </div>
-      <div id="ai-chat-messages">
-        <div class="message ai-message">Halo! Saya AI assistant Zahra. Ada yang bisa saya bantu tentang portofolio atau project programming?</div>
-      </div>
-      <div id="ai-chat-input">
-        <input type="text" id="ai-user-input" placeholder="Tulis pesan...">
-        <button id="ai-send">Kirim</button>
-      </div>
-    </div>
-  </div>
-  <!-- ======= END AI ASSISTANT ======= -->
+  </section>
 
   <!-- Footer -->
-  <footer class="animate">
+  <footer>
     <div class="container">
-      <p>© 2025 ZYR - All Rights Reserved</p>
-      <div class="mt-3">
-        <a href="#" class="text-light mx-2"><i class="fab fa-instagram fa-lg"></i></a>
-        <a href="#" class="text-light mx-2"><i class="far fa-envelope fa-lg"></i></a>
-        <a href="#" class="text-light mx-2"><i class="fab fa-linkedin fa-lg"></i></a>
-        <a href="#" class="text-light mx-2"><i class="fab fa-github fa-lg"></i></a>
+      <h3 style="font-family: 'Playfair Display'; margin-bottom: 20px;">Zahra Yulia</h3>
+      <p class="text-muted mb-4">Made with 💖, Coffee, and Code.</p>
+      <div>
+        <a href="https://instagram.com/zyulear" class="mx-3"><i class="fab fa-instagram fa-lg"></i></a>
+        <a href="mailto:zyulear27@gmail.com" class="mx-3"><i class="far fa-envelope fa-lg"></i></a>
+        <a href="#" class="mx-3"><i class="fab fa-linkedin fa-lg"></i></a>
+        <a href="#" class="mx-3"><i class="fab fa-github fa-lg"></i></a>
       </div>
+      <p class="small text-muted mt-4">© 2025 ZYR - All Rights Reserved</p>
     </div>
   </footer>
 
-  <!-- Bootstrap & Custom JS -->
+  <!-- Back to Top -->
+  <a href="#home" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
+
+  <!-- AI Assistant Widget -->
+  <div id="ai-assistant">
+    <div id="ai-chat-container">
+      <div id="ai-chat-header">
+        <h3><i class="fas fa-robot me-2"></i>Zahra AI</h3>
+        <button id="ai-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="ai-chat-messages">
+        <div class="message ai-message">Halo! Aku versi AI dari Zahra. Ada yang bisa dibantu? Tanya soal coding atau hobi Zahra yuk! 😊</div>
+      </div>
+      <div id="ai-chat-input">
+        <input type="text" id="ai-user-input" placeholder="Tanya sesuatu..." onkeypress="handleKeyPress(event)">
+        <button id="ai-send"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+    <button id="ai-button"><i class="fas fa-comment-dots"></i></button>
+  </div>
+
+  <!-- JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="script.js"></script>
+  <script>
+    // 1. Loader Logic
+    window.addEventListener('load', () => {
+      const loader = document.querySelector('.loader-wrapper');
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 500);
+      }, 1500); // 1.5 seconds delay for effect
+    });
+
+    // 2. Navbar & Scroll Animation
+    const navbar = document.querySelector('.navbar');
+    const backToTop = document.querySelector('.back-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('shadow');
+        navbar.style.background = 'rgba(15, 12, 41, 0.95)';
+        backToTop.classList.add('active');
+      } else {
+        navbar.classList.remove('shadow');
+        navbar.style.background = 'rgba(15, 12, 41, 0.8)';
+        backToTop.classList.remove('active');
+      }
+
+      // Intersection Observer for Animate elements
+      const observes = document.querySelectorAll('.animate');
+      observes.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) {
+          el.classList.add('visible');
+        }
+      });
+    });
+
+    // 3. AI Assistant Logic
+    const aiButton = document.getElementById('ai-button');
+    const aiContainer = document.getElementById('ai-chat-container');
+    const aiClose = document.getElementById('ai-close');
+    const aiInput = document.getElementById('ai-user-input');
+    const aiSend = document.getElementById('ai-send');
+    const aiMessages = document.getElementById('ai-chat-messages');
+
+    // Toggle Chat
+    aiButton.addEventListener('click', () => {
+      aiContainer.classList.toggle('active');
+      aiButton.style.display = aiContainer.classList.contains('active') ? 'none' : 'block';
+    });
+
+    aiClose.addEventListener('click', () => {
+      aiContainer.classList.remove('active');
+      aiButton.style.display = 'block';
+    });
+
+    // Send Message Logic
+    function addMessage(text, sender) {
+      const div = document.createElement('div');
+      div.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+      div.textContent = text;
+      aiMessages.appendChild(div);
+      aiMessages.scrollTop = aiMessages.scrollHeight;
+    }
+
+    function handleAiResponse(userText) {
+      // Simple logic simulation - improvisasi lucu
+      let response = "";
+      const text = userText.toLowerCase();
+
+      if (text.includes('halo') || text.includes('hi')) {
+        response = "Hai! Selamat datang di dunia Zahra. Mau lihat project atau main game?";
+      } else if (text.includes('siapa kamu')) {
+        response = "Aku asisten virtual Zahra yang paling imut! 🤖✨";
+      } else if (text.includes('project') || text.includes('karya')) {
+        response = "Zahra punya banyak project keren! Coba scroll ke bagian 'Projects' di atas ya.";
+      } else if (text.includes('game')) {
+        response = "Suka main game? Zahra bikin game labirin aksara lho, seru banget!";
+      } else if (text.includes('pacar') || text.includes('jomblo')) {
+        response = "Waduh, pertanyaan sensitif nih! Rahasia dong 😜";
+      } else if (text.includes('kontak') || text.includes('email')) {
+        response = "Bisa kirim email ke zyulear27@gmail.com ya!";
+      } else {
+        response = "Hmm, aku belum diajarin jawab itu. Tapi Zahra pasti tahu! Coba kontak dia langsung via form di bawah.";
+      }
+
+      setTimeout(() => {
+        addMessage(response, 'ai');
+      }, 800);
+    }
+
+    aiSend.addEventListener('click', () => {
+      const text = aiInput.value.trim();
+      if (text) {
+        addMessage(text, 'user');
+        aiInput.value = '';
+        handleAiResponse(text);
+      }
+    });
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') aiSend.click();
+    }
+  </script>
 </body>
 </html>
-
-
-
-
-
